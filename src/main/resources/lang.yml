@@ -1,3 +1,14 @@
 last_rank: "&cYou have already reached the last rank!"
-evolved-msg: "You evolved to rank <rank>"
+evolved-msg: "&aYou evolved to rank <rank>"
 evolved-global: "<player> evolved to rank <rank>"
+
+sqlite-sucess: "&aSQLite connection completed."
+sqlite-error: "&cCould not start SQLite."
+table-created: "&aSQLite table created."
+table-error: "&cSQLite table not created."
+player-noloaded: "&cThe player §c<player> was not loaded."
+
+events_sucess: "&aAll events were successfully loaded."
+events_error: "&cEvents were not loaded."
+commands_sucess: "&aAll commands were successfully loaded."
+commands_error: "&cCommands were not loaded."

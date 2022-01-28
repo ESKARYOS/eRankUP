@@ -1,6 +1,7 @@
 package br.com.eskaryos.rankup.listener;
 
 import br.com.eskaryos.rankup.Main;
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.listener.events.Chat;
 import br.com.eskaryos.rankup.listener.events.Join;
 import br.com.eskaryos.rankup.listener.events.Quit;
@@ -22,9 +23,9 @@ public class Listeners implements Listener {
             pm.registerEvents(new Join(), plugin);
             pm.registerEvents(new Quit(), plugin);
             pm.registerEvents(new Chat(), plugin);
-            Logger.log(Logger.LogLevel.SUCCESS, ChatColor.GREEN + log + " Eventos registrados com sucesso.");
+            Logger.log(Logger.LogLevel.SUCCESS, Lang.events_sucess);
         } catch (Exception e) {
-            Logger.log(Logger.LogLevel.ERROR, ChatColor.RED + log + " Não conseguiu registrar os eventos.");
+            Logger.log(Logger.LogLevel.ERROR, Lang.events_error);
         }
     }
 

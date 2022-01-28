@@ -25,13 +25,11 @@ public class DataMain {
     public static void LoadPlayerData(Player p){
         if(profileList.containsKey(p.getUniqueId()))return;
         Database.loadPlayer(p.getUniqueId());
-        Logger.log(Logger.LogLevel.INFO,"§aData carregada §f"+ p.getName());
     }
     public static void UnloadPlayerData(Player p){
         if(!profileList.containsKey(p.getUniqueId()))return;
         Database.setRank(p.getUniqueId(),profileList.get(p.getUniqueId()).getRank().getName());
         getProfileList().remove(p.getUniqueId());
-        Logger.log(Logger.LogLevel.INFO,"§cData descarregada "+ p.getName());
     }
 
 

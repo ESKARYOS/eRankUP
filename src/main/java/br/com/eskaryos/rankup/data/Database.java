@@ -23,9 +23,9 @@ public class Database {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection(url);
             createTable();
-            Logger.log(Logger.LogLevel.INFO,"§aConexão SQLite concluida.");
+            Logger.log(Logger.LogLevel.INFO,Lang.SQLiteSuccess);
         } catch (Exception e) {
-            Logger.log(Logger.LogLevel.ERROR,"§cNão foi possivél iniciar o SQLite.");
+            Logger.log(Logger.LogLevel.ERROR,Lang.SQLiteError);
             Main.plugin.getPluginLoader().disablePlugin(Main.plugin);
         }
     }
@@ -35,12 +35,12 @@ public class Database {
         try {
 
             stm = con.prepareStatement("CREATE TABLE IF NOT EXISTS `rankup` (`uuid` TEXT, `rank` TEXT)");
-            Logger.log(Logger.LogLevel.INFO,"§aTabela do SQLite criada.");
+            Logger.log(Logger.LogLevel.INFO,Lang.TableCreated);
             stm.execute();
             stm.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            Logger.log(Logger.LogLevel.ERROR,"§cNão foi possivél criar tabela no SQLite.");
+            Logger.log(Logger.LogLevel.ERROR,Lang.TableNoCreated);
             Main.plugin.getPluginLoader().disablePlugin(Main.plugin);
         }
     }
@@ -62,10 +62,9 @@ public class Database {
         try {
             Rank rank = RankMain.clone(RankMain.getRankByName(getRank(uuid)));
             DataMain.getProfileList().put(uuid,new Profile(uuid,rank));
-            Logger.log(Logger.LogLevel.INFO,"§aJogador §f" + Bukkit.getPlayer(uuid).getName() + " §a carregado");
         } catch (Exception e) {
             DataMain.getProfileList().put(uuid,new Profile(uuid,RankMain.clone(RankMain.getDefaultRank())));
-            Logger.log(Logger.LogLevel.INFO,"§cJogador §f" + Bukkit.getPlayer(uuid).getName() + " §cnão carregado");
+            Logger.log(Logger.LogLevel.INFO,Lang.PlayerNoLoaded.replace("<player>",Bukkit.getPlayer(uuid).getName()));
         }
     }
 
@@ -90,7 +89,6 @@ public class Database {
         PreparedStatement stm = null;
         if(!playerExists(uuid)){
             try {
-                Logger.log(Logger.LogLevel.INFO,"§aJogador §f" + Bukkit.getPlayer(uuid).getName() + "§a criado");
                 stm = con.prepareStatement("INSERT INTO rankup (uuid,rank) VALUES (?,?)");
 
                 stm.setString(1,uuid.toString());
@@ -98,7 +96,7 @@ public class Database {
                 stm.executeUpdate();
                 stm.close();
             } catch (SQLException e) {
-                Logger.log(Logger.LogLevel.INFO,"§cJogador §f" + Bukkit.getPlayer(uuid).getName() + " §cnão criado");
+                Logger.log(Logger.LogLevel.INFO,Lang.PlayerNoLoaded.replace("<player>",Bukkit.getPlayer(uuid).getName()));
                 e.printStackTrace();
             }
         }
