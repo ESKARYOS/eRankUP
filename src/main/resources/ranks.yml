@@ -1,0 +1,7 @@
+Ranks:
+  default:
+    display: "&7[Default]"
+    order: 0
+  teste:
+    display: "&7[Teste]"
+    order: 1
