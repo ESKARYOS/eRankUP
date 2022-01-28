@@ -1,5 +1,5 @@
 name: eRankUP
-version: '${project.version}'
-main: br.com.eskaryos.rankup
+version: 1.0
+main: br.com.eskaryos.rankup.Main
 api-version: 1.18
 authors: [ ESKARYOS ]
