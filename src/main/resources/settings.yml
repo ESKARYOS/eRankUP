@@ -1,0 +1,32 @@
+#Sound that is played when leveling up
+evolve-sound: LEVEL_UP
+#Sound that is played for every server when leveling up
+evolve-global-sound: AMBIENCE_THUNDER
+#Sound that is changed when it is not possible to evolve
+evolve-error-sound: NOTE_BASS
+#Sound that is played when resetting rank
+reset-sound: BAT_TAKEOFF
+#Sound that is played when unable to set a rank
+reset-sound-error: NOTE_BASS
+
+
+#Disable if using any chat plugin.
+chat: true
+#Server chat format
+chat-format: "<rank><player> &7>> &r<message>"
+
+#Welcome message for player
+join-message:
+  #Set true if you want the welcome message to be sent only on the first login.
+  first-join: false
+  #Set to true if you want the player's chat to be cleared when joining.
+  clear-chat: true
+  #Welcome message, it has support for PlaceholdersAPI
+  message:
+    - ''
+    - '&e================={ &6Hypixel &e}================='
+    - '      &eHi <player>, welcome to our server.'
+    - '&emake friends and build your empire on the server.'
+    - '     &ebecome the strongest and most feared.'
+    - '&e==========================================='
+    - ' '
