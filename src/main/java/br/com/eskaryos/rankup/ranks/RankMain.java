@@ -6,7 +6,9 @@ import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.utils.JavaUtils;
 import br.com.eskaryos.rankup.utils.Logger;
 import br.com.eskaryos.rankup.utils.StringUtils;
+import br.com.eskaryos.rankup.utils.api.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -78,16 +80,17 @@ public class RankMain {
         Rank rank = DataMain.getProfile(uuid).getRank();
         Player p = Bukkit.getPlayer(uuid);
         if(rank.getOrder()>= getFinalRank().getOrder()){
-            p.sendMessage(Lang.last_rank);
-            JavaUtils.playSound(p,SoundsAPI.ENDERMAN_TELEPORT,1.5F,1.0F);
+            p.sendMessage(RankHolder.hook(p,Lang.last_rank));
+            JavaUtils.playSound(p,Lang.evolve_error_sound,1.5F,1.0F);
             return;
         }
         Rank next = getRankById(rank.getOrder()+1);
         if(next!=null){
             DataMain.getProfile(uuid).setRank(clone(next));
-            p.sendMessage(Lang.evolvedMsg.replace("<rank>",next.getDisplay()));
-            JavaUtils.sendAllMessage(Lang.evolvedGlobal.replace("<rank>",next.getDisplay()).replace("<player>",p.getDisplayName()));
-            JavaUtils.sendAllSound(SoundsAPI.AMBIENCE_THUNDER,1F,1F);
+            p.sendMessage(RankHolder.hook(p,Lang.evolvedMsg));
+            JavaUtils.sendAllMessage(RankHolder.hook(p,Lang.evolvedGlobal));
+            JavaUtils.sendAllSound(Lang.evolve_sound,1F,1F);
+            JavaUtils.sendAllSound(Lang.evolve_global_sound,1F,1F);
         }
     }
 

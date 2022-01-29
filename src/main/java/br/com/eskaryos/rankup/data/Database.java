@@ -4,7 +4,9 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.utils.Logger;
+import br.com.eskaryos.rankup.utils.api.RankHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.*;
@@ -64,7 +66,7 @@ public class Database {
             DataMain.getProfileList().put(uuid,new Profile(uuid,rank));
         } catch (Exception e) {
             DataMain.getProfileList().put(uuid,new Profile(uuid,RankMain.clone(RankMain.getDefaultRank())));
-            Logger.log(Logger.LogLevel.INFO,Lang.PlayerNoLoaded.replace("<player>",Bukkit.getPlayer(uuid).getName()));
+            Logger.log(Logger.LogLevel.INFO, RankHolder.hook(Bukkit.getPlayer(uuid),Lang.PlayerNoLoaded));
         }
     }
 
@@ -90,13 +92,19 @@ public class Database {
         if(!playerExists(uuid)){
             try {
                 stm = con.prepareStatement("INSERT INTO rankup (uuid,rank) VALUES (?,?)");
-
+                if(Lang.first_join){
+                    Player p = Bukkit.getPlayer(uuid);
+                    for(String s : Lang.joinMessage){
+                        p.sendMessage(RankHolder.hook(p,s));
+                    }
+                }
                 stm.setString(1,uuid.toString());
                 stm.setString(2, RankMain.getDefaultRank().getName());
                 stm.executeUpdate();
                 stm.close();
+
             } catch (SQLException e) {
-                Logger.log(Logger.LogLevel.INFO,Lang.PlayerNoLoaded.replace("<player>",Bukkit.getPlayer(uuid).getName()));
+                Logger.log(Logger.LogLevel.INFO,RankHolder.hook(Bukkit.getPlayer(uuid),Lang.PlayerNoLoaded));
                 e.printStackTrace();
             }
         }

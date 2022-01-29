@@ -3,3 +3,5 @@ version: 1.0
 main: br.com.eskaryos.rankup.Main
 api-version: 1.18
 authors: [ ESKARYOS ]
+softdepend:
+  - PlaceHolderAPI
