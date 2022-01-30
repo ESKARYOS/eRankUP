@@ -51,6 +51,9 @@ public class Lang {
     public static void LoadFolders(){
         LoadSettings();
         LoadLang();
+
+        File file = new File(Main.plugin.getDataFolder(),"help.yml");
+        if(!file.exists()){Main.plugin.saveResource("help.yml",true);}
     }
 
 

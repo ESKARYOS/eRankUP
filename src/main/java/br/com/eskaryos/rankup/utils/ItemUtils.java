@@ -1,9 +1,34 @@
 package br.com.eskaryos.rankup.utils;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.yaml.snakeyaml.Yaml;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class ItemUtils {
+
+    public static ItemStack getItem(YamlConfiguration config,String key){
+        Material material = Material.valueOf(config.getString(key+".material").toUpperCase(Locale.ROOT));
+        int ammount = config.getInt(key+".ammount");
+        int data = config.getInt(key+".ammount");
+        String display = config.getString(key+".display").replace("&","§");
+        List<String> lore = new ArrayList<>();
+        for(String s : config.getStringList(key+".lore")){
+            lore.add(s.replace("&","§"));
+        }
+        ItemStack item = new ItemStack(material,ammount,(short)data);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(display);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
     public static boolean hasItem(Player p, ItemStack item, int ammount) {
         int i = 0;
         ItemStack[] var5 = p.getInventory().getContents();

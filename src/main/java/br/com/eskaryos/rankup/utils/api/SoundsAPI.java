@@ -3,6 +3,7 @@ package br.com.eskaryos.rankup.utils.api;
 import org.bukkit.Sound;
 
 public enum SoundsAPI {
+    DISABLED(" ",""),
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
     AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN"),
     AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER"),
