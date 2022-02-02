@@ -78,14 +78,35 @@ public class RankMain {
         return null;
     }
 
-    public static void evolve(UUID uuid){
+    public static void evolve(UUID uuid,Rank evolve){
         Rank rank = DataMain.getProfile(uuid).getRank();
         Player p = Bukkit.getPlayer(uuid);
-        if(rank.getOrder()>= getFinalRank().getOrder()){
+
+        if(rank.getOrder()>= getFinalRank().getOrder() && evolve.getOrder()==rank.getOrder()){
             p.sendMessage(RankHolder.hook(p,Lang.last_rank));
             rank.sendEvolveSoundError(p);
             return;
         }
+
+        if(rank.getOrder() == evolve.getOrder()){
+            p.sendMessage(RankHolder.hook(p,Lang.evolveError));
+            rank.sendEvolveSoundError(p);
+            return;
+        }
+
+        if(rank.getOrder()>evolve.getOrder()){
+            p.sendMessage(RankHolder.hook(p,Lang.downgrade));
+            rank.sendEvolveSoundError(p);
+            return;
+        }
+
+        if(rank.getOrder()-evolve.getOrder()>1){
+            p.sendMessage(RankHolder.hook(p,Lang.cantJump));
+            rank.sendEvolveSoundError(p);
+            return;
+        }
+
+
         Rank next = getRankById(rank.getOrder()+1);
         if(next!=null){
             DataMain.getProfile(uuid).setRank(clone(next));
@@ -97,6 +118,8 @@ public class RankMain {
 
             p.getInventory().addItem(next.getRankIcon());
             p.getInventory().addItem(next.getRankIconCompleted());
+
+            next.executeCommand(p);
         }
     }
 
@@ -133,6 +156,8 @@ public class RankMain {
                     rank.setEvolveSound(evolve);
                     rank.setEvolveSoundError(evolveError);
                     rank.setEvolveSoundAll(evolveAll);
+
+                    rank.setCommands(Objects.requireNonNull(config.getStringList("commands")));
 
                     rank.setEvolveMessageAll(evolveMessageAll);
                     rank.setEvolveMessage(evolveMessage);

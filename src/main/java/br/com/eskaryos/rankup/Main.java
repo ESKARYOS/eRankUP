@@ -4,6 +4,7 @@ import br.com.eskaryos.rankup.cmds.Commands;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.listener.Listeners;
+import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.utils.Logger;
 import br.com.eskaryos.rankup.utils.api.Papi;
@@ -27,6 +28,7 @@ public final class Main extends JavaPlugin {
                 Commands.setupCommands();
                 DataMain.SetupData();
                 Lang.LoadFolders();
+                RankMenu.LoadMenus();
                 new Papi().register();
                 Logger.log(Logger.LogLevel.OUTLINE, "§aPlaceholdersAPI activated");
                 Logger.log(Logger.LogLevel.OUTLINE, "§a============================================");

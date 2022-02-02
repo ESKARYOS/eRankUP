@@ -4,6 +4,7 @@ import br.com.eskaryos.rankup.utils.api.EnchantAPI;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import com.google.common.io.Files;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,8 +18,30 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.bukkit.ChatColor.COLOR_CHAR;
 
 public class JavaUtils {
+
+    public String hex(String startTag, String endTag, String message)
+    {
+        final Pattern hexPattern = Pattern.compile(startTag + "([A-Fa-f0-9]{6})" + endTag);
+        Matcher matcher = hexPattern.matcher(message);
+        StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
+        while (matcher.find())
+        {
+            String group = matcher.group(1);
+            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
+                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
+                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
+                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
+            );
+        }
+        return matcher.appendTail(buffer).toString();
+    }
+
     public static void deleteFile(File file) {
         if (!file.exists()) {
             return;

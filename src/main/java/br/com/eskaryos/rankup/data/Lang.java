@@ -21,6 +21,10 @@ public class Lang {
     public static String evolvedGlobal = "<player> §aevolved to rank <rank>";
     public static String rankredefine = "&aYour rank has been reset to rank <rank>";
     public static String rankredefineerror = "&cThere was a problem trying to reset your rank.";
+    public static String invalidMenu = "&cThis menu does not exist, please try again.";
+    public static String cantJump = "&cYou cannot evolve to a higher rank, evolve for <next> first.";
+    public static String downgrade = "&cYou cannot downgrade your rank.";
+    public static String evolveError = "&cYou cannot evolve to this rank.";
 
     public static String SQLiteSuccess = "§aSQLite connection completed.";
     public static String SQLiteError = "§cCould not start SQLite.";
@@ -30,6 +34,7 @@ public class Lang {
 
     public static String events_sucess = "§aAll events were successfully loaded.";
     public static String events_error = "§cEvents were not loaded.";
+    public static String lastRankVariable = "§clast rank";
 
     public static String commands_sucess = "§aAll commands were successfully loaded.";
     public static String commands_error = "§cCommands were not loaded.";
@@ -63,8 +68,13 @@ public class Lang {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
         last_rank = convert(Objects.requireNonNull(config.getString("last_rank")));
+        lastRankVariable = convert(Objects.requireNonNull(config.getString("last_rank_var")));
         evolvedMsg = convert(Objects.requireNonNull(config.getString("evolved-msg")));
         evolvedGlobal = convert(Objects.requireNonNull(config.getString("evolved-global")));
+        invalidMenu = convert(Objects.requireNonNull(config.getString("invalid-menu")));
+        cantJump = convert(Objects.requireNonNull(config.getString("cant-jump")));
+        downgrade = convert(Objects.requireNonNull(config.getString("downgrade")));
+        evolveError = convert(Objects.requireNonNull(config.getString("evolve-error")));
 
         SQLiteSuccess = convert(Objects.requireNonNull(config.getString("sqlite-sucess")));
         SQLiteError = convert(Objects.requireNonNull(config.getString("sqlite-error")));

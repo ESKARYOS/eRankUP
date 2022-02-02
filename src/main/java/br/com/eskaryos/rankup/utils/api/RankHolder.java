@@ -1,6 +1,7 @@
 package br.com.eskaryos.rankup.utils.api;
 
 import br.com.eskaryos.rankup.data.DataMain;
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -23,7 +24,7 @@ public class RankHolder {
         if(m.contains("<next>")){
             Rank rank = DataMain.getProfile(p.getUniqueId()).getRank();
             if(RankMain.getFinalRank().getOrder()>=rank.getOrder()){
-                message=  message.replace("<next>","§cLimit");
+                message=  message.replace("<next>", Lang.lastRankVariable);
             }else{
                 message = m.replace("<next>",Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1)).getDisplay());
             }

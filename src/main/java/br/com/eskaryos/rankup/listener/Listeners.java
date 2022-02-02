@@ -5,6 +5,7 @@ import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.listener.events.Chat;
 import br.com.eskaryos.rankup.listener.events.Join;
 import br.com.eskaryos.rankup.listener.events.Quit;
+import br.com.eskaryos.rankup.menu.MenuListener;
 import br.com.eskaryos.rankup.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ public class Listeners implements Listener {
             pm.registerEvents(new Join(), plugin);
             pm.registerEvents(new Quit(), plugin);
             pm.registerEvents(new Chat(), plugin);
+            pm.registerEvents(new MenuListener(),plugin);
             Logger.log(Logger.LogLevel.SUCCESS, Lang.events_sucess);
         } catch (Exception e) {
             Logger.log(Logger.LogLevel.ERROR, Lang.events_error);

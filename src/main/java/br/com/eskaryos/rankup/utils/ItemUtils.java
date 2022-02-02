@@ -1,5 +1,6 @@
 package br.com.eskaryos.rankup.utils;
 
+import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ public class ItemUtils {
     public static ItemStack getItem(YamlConfiguration config,String key){
         Material material = Material.valueOf(config.getString(key+".material").toUpperCase(Locale.ROOT));
         int ammount = config.getInt(key+".ammount");
-        int data = config.getInt(key+".ammount");
+        int data = config.getInt(key+".data");
         String display = config.getString(key+".display").replace("&","§");
         List<String> lore = new ArrayList<>();
         for(String s : config.getStringList(key+".lore")){

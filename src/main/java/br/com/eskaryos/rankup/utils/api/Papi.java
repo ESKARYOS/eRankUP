@@ -2,6 +2,7 @@ package br.com.eskaryos.rankup.utils.api;
 
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -34,7 +35,7 @@ public class Papi extends PlaceholderExpansion {
         if(s.equals("next")){
             Rank rank = DataMain.getProfile(p.getUniqueId()).getRank();
             if(RankMain.getFinalRank().getOrder()>=rank.getOrder()){
-                return "§cLimit";
+                return Lang.lastRankVariable;
             }
             return Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1)).getDisplay();
         }
