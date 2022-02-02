@@ -1,0 +1,57 @@
+#Rank name, do not use cores or symbols, this name will be used as the rank identifier.
+name: default
+#This is the display name of the rank, here you can use colors and symbols.
+display: "&7[Default] "
+#This is the rank order, set 0 for the starting rank, the higher the rank the more advanced the rank,
+#if there is any rank with the same rank it will not be loaded.
+order: 0
+
+#=======================================================================================================================
+#To find out which sounds to use, open the help.yml file
+
+#This sound will only be played for the player when leveling up.Set DISABLED to mute the sound
+evolve-sound: LEVEL_UP
+
+#This sound will be changed when it is not possible to evolve your rank.Set DISABLED to mute the sound
+evolve-sound-error: NOTE_BASS
+
+#This sound will be played for everyone when you level up,Leave empty to remove sound.Set DISABLED to mute the sound
+evolve-sound-global: AMBIENCE_THUNDER
+
+#=======================================================================================================================
+
+#Message that will be sent to the player when evolving their rank
+evolve-message:
+  - ''
+  - '&aYou evolved to rank <rank>'
+  - ''
+
+#Message sent to everyone when leveling up
+evolve-message-global:
+  - '<player> &aevolved to rank <rank>'
+
+icon:
+  display: "&7[Default]"
+  material: stone
+  data: 0
+  ammount: 1
+  lore:
+    - '&7This is the default rank'
+    - '&7they all start with s rank.'
+icon-completed:
+  display: "&7[Default]"
+  material: stone
+  data: 0
+  ammount: 1
+  lore:
+    - '&7This is the default rank'
+    - '&7they all start with s rank.'
+
+#Commands that will be executed when evolving in rank.
+#To give an item use              give: -material -ammount -data -display -lore[line 1] -lore[line 2]....
+#To run a command use             console: <command>
+#To send broadcast message use    bc: <message>
+#To send message use              message: <message>
+#Use <player> to identify the player
+commands:
+  - 'give: -golden_apple -1 -1'

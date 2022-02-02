@@ -1,0 +1,53 @@
+#This menu appears to confirm the evolution
+Confirm-Menu:
+  #Inventory title name
+  name: "&7Confirm evolution ?"
+  #Inventory size
+  size: 54
+  #Leave false to disable the confirmation menu
+  enabled: true
+  #Inventory items
+  items:
+#Do not remove confirm and deny items
+    confirm:
+      #Item display name
+      display: "&aAccept"
+      #Item material, can use numeric id
+      material: grass
+      #Item date if it has
+      data: 0
+      #Item slot in inventory
+      slot: 10
+      #Number of items
+      ammount: 1
+      #Item description
+      lore:
+        - '&7Click to accept evolve'
+    deny:
+      display: "&cDeny"
+      material: grass
+      data: 0
+      slot: 14
+      ammount: 1
+      lore:
+        - '&7Click to deny evolution'
+        -
+#This is the ranks menu, here you can create rank pages
+Rank-Menu:
+#To create a new page use 'page-<number>'
+  page-1:
+    name: "&7Rank menu"
+    size: 54
+    items:
+#To add a link just repeat the below and change the slot and rank
+      rank1:
+        rank: default
+        slot: 10
+      close:
+        display: "&cClose menu"
+        material: barrier
+        data: 0
+        slot: 49
+        ammount: 1
+        lore:
+          - '&7Click to close menu'
