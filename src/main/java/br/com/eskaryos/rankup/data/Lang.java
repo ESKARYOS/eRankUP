@@ -4,6 +4,7 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.utils.StringUtils;
 import br.com.eskaryos.rankup.utils.api.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -66,7 +67,6 @@ public class Lang {
         File file = new File(Main.plugin.getDataFolder(),"lang.yml");
         if(!file.exists()){Main.plugin.saveResource("lang.yml",true);}
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
         last_rank = convert(Objects.requireNonNull(config.getString("last_rank")));
         lastRankVariable = convert(Objects.requireNonNull(config.getString("last_rank_var")));
         evolvedMsg = convert(Objects.requireNonNull(config.getString("evolved-msg")));

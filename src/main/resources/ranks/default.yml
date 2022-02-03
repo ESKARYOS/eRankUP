@@ -1,7 +1,7 @@
 #Rank name, do not use cores or symbols, this name will be used as the rank identifier.
 name: default
 #This is the display name of the rank, here you can use colors and symbols.
-display: "&7[Default] "
+display: "&e[Default] "
 #This is the rank order, set 0 for the starting rank, the higher the rank the more advanced the rank,
 #if there is any rank with the same rank it will not be loaded.
 order: 0
@@ -30,17 +30,57 @@ evolve-message:
 evolve-message-global:
   - '<player> &aevolved to rank <rank>'
 
+#Rank menu
+menu:
+  size: 54
+  items:
+    rank:
+      display: "<rank>"
+      slot: 13
+      material: diamond_block
+      data: 0
+      ammount: 1
+      lore:
+        - '&7This is your rank'
+        - '&7next rank <next>'
+    evolve:
+      display: "&eClick to evolve"
+      slot: 31
+      material: 384
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click here to evolve'
+        - '&7to rank <next>'
+    back:
+      display: "&ePrevious page"
+      slot: 45
+      material: arrow
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click to go back to main page'
+    close:
+      display: "&eClose menu"
+      slot: 49
+      material: barrier
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click to go back to main page'
+#Rank icon
 icon:
-  display: "&7[Default]"
-  material: stone
+  display: "&e[Default]"
+  material: diamond_block
   data: 0
   ammount: 1
   lore:
     - '&7This is the default rank'
     - '&7they all start with s rank.'
+#Rank icon completed
 icon-completed:
-  display: "&7[Default]"
-  material: stone
+  display: "&e[Default]"
+  material: diamond_block
   data: 0
   ammount: 1
   lore:

@@ -8,7 +8,6 @@ import br.com.eskaryos.rankup.listener.events.Quit;
 import br.com.eskaryos.rankup.menu.MenuListener;
 import br.com.eskaryos.rankup.utils.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 

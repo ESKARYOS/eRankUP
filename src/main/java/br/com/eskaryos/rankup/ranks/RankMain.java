@@ -3,20 +3,20 @@ package br.com.eskaryos.rankup.ranks;
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
+import br.com.eskaryos.rankup.menu.Menu;
+import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.utils.ItemUtils;
-import br.com.eskaryos.rankup.utils.JavaUtils;
 import br.com.eskaryos.rankup.utils.Logger;
-import br.com.eskaryos.rankup.utils.StringUtils;
+import br.com.eskaryos.rankup.utils.MultipleFile;
 import br.com.eskaryos.rankup.utils.api.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.xml.crypto.Data;
+
 import java.io.File;
 import java.util.*;
 
@@ -78,57 +78,82 @@ public class RankMain {
         return null;
     }
 
+    /**
+     * Execute evolve rank
+     * @param uuid Player UUID
+     * @param evolve Rank to evolve
+     */
     public static void evolve(UUID uuid,Rank evolve){
         Rank rank = DataMain.getProfile(uuid).getRank();
         Player p = Bukkit.getPlayer(uuid);
-
+        assert p!=null;
+        /**
+        *Check if rank to evolve is a last rank
+         */
         if(rank.getOrder()>= getFinalRank().getOrder() && evolve.getOrder()==rank.getOrder()){
             p.sendMessage(RankHolder.hook(p,Lang.last_rank));
             rank.sendEvolveSoundError(p);
             return;
         }
-
+        /***
+         * Check if rank equals a evolve rank
+         */
         if(rank.getOrder() == evolve.getOrder()){
             p.sendMessage(RankHolder.hook(p,Lang.evolveError));
             rank.sendEvolveSoundError(p);
             return;
         }
-
+        /***
+         * Check if player rank is bigger then next rank
+         */
         if(rank.getOrder()>evolve.getOrder()){
             p.sendMessage(RankHolder.hook(p,Lang.downgrade));
             rank.sendEvolveSoundError(p);
             return;
         }
-
+        /***
+         * Check if the next rank has been skipped
+         */
         if(rank.getOrder()-evolve.getOrder()>1){
             p.sendMessage(RankHolder.hook(p,Lang.cantJump));
             rank.sendEvolveSoundError(p);
             return;
         }
-
-
-        Rank next = getRankById(rank.getOrder()+1);
-        if(next!=null){
-            DataMain.getProfile(uuid).setRank(clone(next));
-            next.sendEvolveMessage(p);
-            next.sendAllEvolveMessage(p);
+        /***
+         * Execute evolve
+         */
+        if(evolve!=null){
+            DataMain.getProfile(uuid).setRank(clone(evolve));
+            evolve.sendEvolveMessage(p);
+            evolve.sendAllEvolveMessage(p);
             assert p != null;
-            next.sendEvolveSound(p);
-            next.sendAllEvolveSound();
+            evolve.sendEvolveSound(p);
+            evolve.sendAllEvolveSound();
 
-            p.getInventory().addItem(next.getRankIcon());
-            p.getInventory().addItem(next.getRankIconCompleted());
+            p.getInventory().addItem(evolve.getRankIcon());
+            p.getInventory().addItem(evolve.getRankIconCompleted());
 
-            next.executeCommand(p);
+            evolve.executeCommand(p);
         }
     }
 
+    /***
+     * Clone  rank to avoid bugs
+     * @param rank
+     * @return return rank cloned;
+     */
     public static Rank clone(Rank rank){
         return rank.clone();
     }
 
+    /**
+     * Load all ranks from folder
+     */
     public static void loadRank(){
         File path = new File(Main.plugin.getDataFolder() + "/ranks");
+        if(!path.exists()){
+            Main.plugin.saveResource("ranks/default.yml",true);
+        }
         File[] list = path.listFiles();
         assert list != null;
         for(File file : list){
@@ -161,7 +186,12 @@ public class RankMain {
 
                     rank.setEvolveMessageAll(evolveMessageAll);
                     rank.setEvolveMessage(evolveMessage);
-
+                    Menu menu = new Menu(display,config.getInt("menu.size"));
+                    for(String key : config.getConfigurationSection("menu.items").getKeys(false)){
+                        menu.getItems().put(key, RankMenu.getItem(config,"menu.items."+key));
+                        menu.getItemSlot().put(key,config.getInt("menu.items."+key+".slot"));
+                    }
+                    rank.setMenu(menu);
                     if(getRankById(order)!=null){
                         Logger.log(Logger.LogLevel.ERROR,"§cCould not load §f"+ file.getName()+"§c rank because there is already a rank with order §f" + order);
                     }else if(getRankByName(name)!=null){
@@ -176,6 +206,8 @@ public class RankMain {
             }
         }
     }
+
+
     public static List<String> convert(List<String> l1){
         List<String> list = new ArrayList<>();
         for(String s : l1){list.add(s.replace("&","§"));}

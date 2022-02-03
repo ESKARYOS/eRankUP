@@ -8,6 +8,7 @@ import br.com.eskaryos.rankup.utils.api.RankHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,7 +23,23 @@ public class MenuListener extends Listeners {
         if(e.getCurrentItem()==null)return;
         if(!e.getCurrentItem().hasItemMeta())return;
         ItemStack item = e.getCurrentItem();
-
+        if(hasRankMenu(e.getView().getTitle())!=null){
+            e.setCancelled(true);
+            Rank rank = hasRankMenu(e.getView().getTitle());
+            Menu menu = rank.getMenu();
+            if(menu.getItems().containsKey("evolve") && e.getCurrentItem().equals(getItem(p,menu.getItems().get("evolve")))){
+                RankMenu.confirmEvolve(p);
+            }
+            if(menu.getItems().containsKey("back") && e.getCurrentItem().equals(getItem(p,menu.getItems().get("back")))){
+                RankMenu.rankMenu(p,1);
+                return;
+            }
+            if(menu.getItems().containsKey("close") && e.getCurrentItem().equals(getItem(p,menu.getItems().get("close")))){
+                p.closeInventory();
+                return;
+            }
+            return;
+        }
         if(RankMenu.menuTitles.contains(e.getView().getTitle())){
             e.setCancelled(true);
             if(getMenu(e.getView().getTitle())!=null){
@@ -50,12 +67,23 @@ public class MenuListener extends Listeners {
                 if(!menu.getRanks().isEmpty()){
                     if(getRankByDisplay(menu,e.getCurrentItem().getItemMeta().getDisplayName(),p)!=null){
                         Rank rank = getRankByDisplay(menu,e.getCurrentItem().getItemMeta().getDisplayName(),p);
-                        RankMain.evolve(p.getUniqueId(),rank);
+                        RankMenu.menu(rank,p);
                     }
                 }
             }
         }
 
+    }
+
+    public ItemStack getItem(Player p,ItemStack item){
+        ItemStack i = new ItemStack(item.getType(),item.getAmount(),item.getDurability());
+        ItemMeta meta = i.getItemMeta();
+        meta.setDisplayName(RankHolder.hook(p,item.getItemMeta().getDisplayName()));
+        List<String> lore = new ArrayList<>();
+        for(String k :item.getItemMeta().getLore()){lore.add(RankHolder.hook(p,k));}
+        meta.setLore(lore);
+        i.setItemMeta(meta);
+        return i;
     }
 
     public Menu getMenu(String title){
@@ -66,7 +94,14 @@ public class MenuListener extends Listeners {
         }
         return null;
     }
-
+    public Rank hasRankMenu(String name){
+        for(Rank rank : RankMain.getAllRanks()){
+            if(rank.getDisplay().equals(name)){
+                return rank;
+            }
+        }
+        return null;
+    }
     public Rank getRankByDisplay(Menu menu,String display,Player p){
         for(String s : menu.getRanks()){
             String item1 = RankMain.getRankByName(s.split(":")[0]).getRankIcon().getItemMeta().getDisplayName();

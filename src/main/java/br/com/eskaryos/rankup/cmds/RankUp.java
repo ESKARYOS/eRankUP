@@ -30,7 +30,6 @@ public class RankUp extends Command {
     public boolean execute(CommandSender sender, String s, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            //RankMenu.confirmEvolve(p);
             RankMenu.rankMenu(p,Integer.parseInt(args[0]));
         }
 

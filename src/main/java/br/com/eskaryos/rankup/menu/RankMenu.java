@@ -2,6 +2,7 @@ package br.com.eskaryos.rankup.menu;
 
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.Lang;
+import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.utils.api.RankHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,6 +30,10 @@ public class RankMenu {
 
     public static void confirmEvolve(Player p){
         p.openInventory(menus.get("ConfirmMenu").getMenu(p));
+    }
+
+    public static void menu(Rank rank, Player p){
+        p.openInventory(rank.getMenu().getMenu(p));
     }
 
     public static void rankMenu(Player p,int page){
@@ -69,7 +74,6 @@ public class RankMenu {
                     String rank = config.getString("Rank-Menu."+key+".items."+key2+".rank");
                     int slt = config.getInt("Rank-Menu."+key+".items."+key2+".slot");
                     menu.getRanks().add(rank+":"+slt);
-                    System.out.println(rank+":"+slt);
                 }else{
                     menu.getItems().put(key2,getItem(config,"Rank-Menu."+key+".items."+key2));
                     menu.getItemSlot().put(key2,config.getInt("Rank-Menu."+key+".items."+key2+".slot"));
@@ -94,7 +98,7 @@ public class RankMenu {
         return list;
     }
 
-    private static ItemStack getItem(YamlConfiguration config,String key){
+    public static ItemStack getItem(YamlConfiguration config, String key){
         Material material = Material.matchMaterial(Objects.requireNonNull(config.getString(key+".material")).toUpperCase(Locale.ROOT));
         int ammount = config.getInt(key+".ammount");
         int data = config.getInt(key+".data");
