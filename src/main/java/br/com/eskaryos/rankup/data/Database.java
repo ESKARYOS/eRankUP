@@ -3,13 +3,14 @@ package br.com.eskaryos.rankup.data;
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.Logger;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.utils.bukkit.Logger;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Database {
@@ -60,10 +61,12 @@ public class Database {
 
     public static void loadPlayer(UUID uuid){
         createPlayer(uuid);
-
         try {
             Rank rank = RankMain.clone(RankMain.getRankByName(getRank(uuid)));
             DataMain.getProfileList().put(uuid,new Profile(uuid,rank));
+            if(RankMain.getRankById(rank.getOrder()+1)!=null){
+                DataMain.getProfile(uuid).setNext(RankMain.clone(Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1))));
+            }
         } catch (Exception e) {
             DataMain.getProfileList().put(uuid,new Profile(uuid,RankMain.clone(RankMain.getDefaultRank())));
             Logger.log(Logger.LogLevel.INFO, RankHolder.hook(Bukkit.getPlayer(uuid),Lang.PlayerNoLoaded));

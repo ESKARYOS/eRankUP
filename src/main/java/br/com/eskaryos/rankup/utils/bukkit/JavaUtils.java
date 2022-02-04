@@ -1,5 +1,6 @@
-package br.com.eskaryos.rankup.utils;
+package br.com.eskaryos.rankup.utils.bukkit;
 
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.utils.api.EnchantAPI;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import com.google.common.io.Files;
@@ -169,7 +170,7 @@ public class JavaUtils {
                 progressBar.append(barraFundo);
             }
 
-            progressBar.append("■");
+            progressBar.append(Lang.bar);
         }
 
         return progressBar.toString();

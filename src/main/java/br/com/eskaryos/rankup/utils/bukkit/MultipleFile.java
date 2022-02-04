@@ -1,4 +1,4 @@
-package br.com.eskaryos.rankup.utils;
+package br.com.eskaryos.rankup.utils.bukkit;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -3,13 +3,10 @@ package br.com.eskaryos.rankup.menu;
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -43,7 +40,6 @@ public class RankMenu {
             p.sendMessage(Lang.invalidMenu);
         }
     }
-
 
     public static void LoadMenus(){
         File file = new File(Main.plugin.getDataFolder(),"menu.yml");
@@ -102,13 +98,16 @@ public class RankMenu {
         Material material = Material.matchMaterial(Objects.requireNonNull(config.getString(key+".material")).toUpperCase(Locale.ROOT));
         int ammount = config.getInt(key+".ammount");
         int data = config.getInt(key+".data");
-        List<String> lore = convert(config.getStringList(key+".lore"));
-        String name = convert(Objects.requireNonNull(config.getString(key+".display")));
-        assert material != null;
         ItemStack item = new ItemStack(material,ammount,(short)data);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        meta.setLore(lore);
+        if(config.contains(key+".display")){
+            String name = convert(Objects.requireNonNull(config.getString(key+".display")));
+            meta.setDisplayName(name);
+        }
+        if(config.contains(key+".lore")){
+            List<String> lore = convert(config.getStringList(key+".lore"));
+            meta.setLore(lore);
+        }
         item.setItemMeta(meta);
         return item;
     }

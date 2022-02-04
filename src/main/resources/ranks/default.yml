@@ -35,9 +35,9 @@ menu:
   size: 54
   items:
     rank:
-      display: "<rank>"
+      display: "&e[Grass]"
       slot: 13
-      material: diamond_block
+      material: grass
       data: 0
       ammount: 1
       lore:
@@ -70,8 +70,8 @@ menu:
         - '&7Click to go back to main page'
 #Rank icon
 icon:
-  display: "&e[Default]"
-  material: diamond_block
+  display: "&c[Default]"
+  material: grass
   data: 0
   ammount: 1
   lore:
@@ -79,8 +79,8 @@ icon:
     - '&7they all start with s rank.'
 #Rank icon completed
 icon-completed:
-  display: "&e[Default]"
-  material: diamond_block
+  display: "&a[Default]"
+  material: grass
   data: 0
   ammount: 1
   lore:
@@ -95,3 +95,12 @@ icon-completed:
 #Use <player> to identify the player
 commands:
   - 'give: -golden_apple -1 -1'
+
+requirements:
+  craft_iron_block:
+    type: CRAFT
+    value: 5
+    item:
+      material: iron_block
+      data: 0
+      ammount: 1

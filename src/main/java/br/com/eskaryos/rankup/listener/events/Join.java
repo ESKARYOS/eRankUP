@@ -3,7 +3,7 @@ package br.com.eskaryos.rankup.listener.events;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.listener.Listeners;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;

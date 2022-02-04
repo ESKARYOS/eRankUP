@@ -2,7 +2,7 @@ package br.com.eskaryos.rankup.cmds;
 
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.Lang;
-import br.com.eskaryos.rankup.utils.Logger;
+import br.com.eskaryos.rankup.utils.bukkit.Logger;
 
 public class Commands {
 

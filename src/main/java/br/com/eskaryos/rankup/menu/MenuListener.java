@@ -4,11 +4,12 @@ import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.listener.Listeners;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -25,6 +26,7 @@ public class MenuListener extends Listeners {
         ItemStack item = e.getCurrentItem();
         if(hasRankMenu(e.getView().getTitle())!=null){
             e.setCancelled(true);
+            JavaUtils.playSound(p, SoundsAPI.CLICK,1F,1F);
             Rank rank = hasRankMenu(e.getView().getTitle());
             Menu menu = rank.getMenu();
             if(menu.getItems().containsKey("evolve") && e.getCurrentItem().equals(getItem(p,menu.getItems().get("evolve")))){
@@ -41,6 +43,7 @@ public class MenuListener extends Listeners {
             return;
         }
         if(RankMenu.menuTitles.contains(e.getView().getTitle())){
+            JavaUtils.playSound(p, SoundsAPI.CLICK,1F,1F);
             e.setCancelled(true);
             if(getMenu(e.getView().getTitle())!=null){
                 Menu menu = getMenu(e.getView().getTitle());
@@ -53,9 +56,8 @@ public class MenuListener extends Listeners {
             }
             if(e.getView().getTitle().equals(RankMenu.confirmName)){
                 if(item.equals(RankMenu.menus.get("ConfirmMenu").clone(p,"confirm"))){
-                    Rank rank = DataMain.getProfile(p.getUniqueId()).getRank();
-
-                    RankMain.evolve(p.getUniqueId(),RankMain.getRankById(rank.getOrder()+1));p.closeInventory();
+                    RankMain.evolve(p.getUniqueId(),DataMain.getProfile(p.getUniqueId()).getNext().clone());
+                    p.closeInventory();
                 }
                 if(item.equals(RankMenu.menus.get("ConfirmMenu").clone(p,"deny"))){
                     p.closeInventory();
@@ -64,11 +66,11 @@ public class MenuListener extends Listeners {
             }
             if(getMenu(e.getView().getTitle())!=null){
                 Menu menu = getMenu(e.getView().getTitle());
+                Rank playerRank = DataMain.getProfile(p.getUniqueId()).getRank();
                 if(!menu.getRanks().isEmpty()){
-                    if(getRankByDisplay(menu,e.getCurrentItem().getItemMeta().getDisplayName(),p)!=null){
-                        Rank rank = getRankByDisplay(menu,e.getCurrentItem().getItemMeta().getDisplayName(),p);
-                        RankMenu.menu(rank,p);
-                    }
+                    Rank rank = getRankByDisplay(menu,e.getCurrentItem().getItemMeta().getDisplayName(),p);
+                    if(rank.getOrder() <= playerRank.getOrder())return;
+                    RankMenu.menu(rank,p);
                 }
             }
         }

@@ -1,8 +1,9 @@
 package br.com.eskaryos.rankup.menu;
 
+import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -38,9 +39,15 @@ public class Menu {
         for(String key: getItemSlot().keySet()){
             inv.setItem(getItemSlot().get(key),list.get(key));
         }
-
+        int order = DataMain.getProfile(p.getUniqueId()).getRank().getOrder();
         for(String name : getRanks()){
-            inv.setItem(Integer.parseInt(name.split(":")[1]),RankMain.getRankByName(name.split(":")[0]).getRankIcon());
+            Rank rank = RankMain.getRankByName(name.split(":")[0]);
+            int slot = Integer.parseInt(name.split(":")[1]);
+            if(order>=rank.getOrder()){
+                inv.setItem(slot,clone(p,rank.getRankIconCompleted()));
+            }else{
+                inv.setItem(slot,clone(p,rank.getRankIcon()));
+            }
         }
 
         return inv;

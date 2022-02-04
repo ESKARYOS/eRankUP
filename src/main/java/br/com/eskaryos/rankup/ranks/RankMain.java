@@ -3,15 +3,16 @@ package br.com.eskaryos.rankup.ranks;
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
+import br.com.eskaryos.rankup.data.Profile;
 import br.com.eskaryos.rankup.menu.Menu;
 import br.com.eskaryos.rankup.menu.RankMenu;
-import br.com.eskaryos.rankup.utils.ItemUtils;
-import br.com.eskaryos.rankup.utils.Logger;
-import br.com.eskaryos.rankup.utils.MultipleFile;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.requirements.Requirement;
+import br.com.eskaryos.rankup.requirements.RequirementType;
+import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
+import br.com.eskaryos.rankup.utils.bukkit.Logger;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,6 +39,13 @@ public class RankMain {
         return new ArrayList<>(rankMap.values());
     }
 
+    public static boolean isLastRank(Player p){
+        Profile profile = DataMain.getProfile(p.getUniqueId());
+        if(profile.getRank().getOrder()>=RankMain.getFinalRank().getOrder()){
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Get rank by String
@@ -78,6 +86,22 @@ public class RankMain {
         return null;
     }
 
+    public static boolean hascompleted(Player p){
+        Rank rank = DataMain.getProfile(p.getUniqueId()).getNext();
+        List<Requirement> list = new ArrayList<>();
+        for(RequirementType type : rank.getRequirements().keySet()){
+            list.addAll(rank.getRequirements().get(type));
+        }
+        for(Requirement requirement : list){
+            if(requirement.getValue()<requirement.getMax()){
+                p.sendMessage(RankHolder.hook(p,Lang.requirementError));
+                rank.sendEvolveSoundError(p);
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Execute evolve rank
      * @param uuid Player UUID
@@ -90,16 +114,8 @@ public class RankMain {
         /**
         *Check if rank to evolve is a last rank
          */
-        if(rank.getOrder()>= getFinalRank().getOrder() && evolve.getOrder()==rank.getOrder()){
+        if(isLastRank(p)){
             p.sendMessage(RankHolder.hook(p,Lang.last_rank));
-            rank.sendEvolveSoundError(p);
-            return;
-        }
-        /***
-         * Check if rank equals a evolve rank
-         */
-        if(rank.getOrder() == evolve.getOrder()){
-            p.sendMessage(RankHolder.hook(p,Lang.evolveError));
             rank.sendEvolveSoundError(p);
             return;
         }
@@ -122,16 +138,16 @@ public class RankMain {
         /***
          * Execute evolve
          */
-        if(evolve!=null){
+        if(hascompleted(p)){
             DataMain.getProfile(uuid).setRank(clone(evolve));
+            if(evolve.getOrder()<RankMain.getFinalRank().getOrder()){
+                DataMain.getProfile(p.getUniqueId()).setNext(RankMain.getRankById(evolve.getOrder()+1));
+            }
+
             evolve.sendEvolveMessage(p);
             evolve.sendAllEvolveMessage(p);
-            assert p != null;
             evolve.sendEvolveSound(p);
             evolve.sendAllEvolveSound();
-
-            p.getInventory().addItem(evolve.getRankIcon());
-            p.getInventory().addItem(evolve.getRankIconCompleted());
 
             evolve.executeCommand(p);
         }
@@ -149,13 +165,22 @@ public class RankMain {
     /**
      * Load all ranks from folder
      */
+
+    public static void loadDefault(){
+        File path = new File(Main.plugin.getDataFolder() + "/ranks");
+    }
     public static void loadRank(){
         File path = new File(Main.plugin.getDataFolder() + "/ranks");
         if(!path.exists()){
             Main.plugin.saveResource("ranks/default.yml",true);
+            Main.plugin.saveResource("ranks/stone.yml",true);
         }
         File[] list = path.listFiles();
         assert list != null;
+        if(list.length<=0){
+            Main.plugin.saveResource("ranks/default.yml",true);
+            Main.plugin.saveResource("ranks/stone.yml",true);
+        }
         for(File file : list){
             if(file.getName().endsWith(".yml")){
                 try{
@@ -191,6 +216,20 @@ public class RankMain {
                         menu.getItems().put(key, RankMenu.getItem(config,"menu.items."+key));
                         menu.getItemSlot().put(key,config.getInt("menu.items."+key+".slot"));
                     }
+                    for(String key : config.getConfigurationSection("requirements").getKeys(false)){
+                        RequirementType type = RequirementType.valueOf(config.getString("requirements."+key+".type"));
+                        if(type != RequirementType.KILL){
+                           ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
+                           int max = config.getInt("requirements."+key+".value");
+                           rank.getRequirements().get(type).add(new Requirement(item,null,max));
+                        }else{
+                            String entity = config.getString("requirements."+key+".entity");
+                            int max = config.getInt("requirements."+key+".value");
+                            rank.getRequirements().get(type).add(new Requirement(null,entity,max));
+                        }
+
+                    }
+
                     rank.setMenu(menu);
                     if(getRankById(order)!=null){
                         Logger.log(Logger.LogLevel.ERROR,"§cCould not load §f"+ file.getName()+"§c rank because there is already a rank with order §f" + order);
@@ -206,6 +245,7 @@ public class RankMain {
             }
         }
     }
+
 
 
     public static List<String> convert(List<String> l1){

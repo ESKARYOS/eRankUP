@@ -1,13 +1,9 @@
 package br.com.eskaryos.rankup.data;
 
 import br.com.eskaryos.rankup.Main;
-import br.com.eskaryos.rankup.utils.StringUtils;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,12 +16,13 @@ public class Lang {
     public static String last_rank = "§cYou have already reached the last rank!";
     public static String evolvedMsg = "§aYou evolved to rank <rank>";
     public static String evolvedGlobal = "<player> §aevolved to rank <rank>";
-    public static String rankredefine = "&aYour rank has been reset to rank <rank>";
-    public static String rankredefineerror = "&cThere was a problem trying to reset your rank.";
-    public static String invalidMenu = "&cThis menu does not exist, please try again.";
-    public static String cantJump = "&cYou cannot evolve to a higher rank, evolve for <next> first.";
-    public static String downgrade = "&cYou cannot downgrade your rank.";
-    public static String evolveError = "&cYou cannot evolve to this rank.";
+    public static String rankredefine = "§aYour rank has been reset to rank <rank>";
+    public static String rankredefineerror = "§cThere was a problem trying to reset your rank.";
+    public static String invalidMenu = "§cThis menu does not exist, please try again.";
+    public static String cantJump = "§cYou cannot evolve to a higher rank, evolve for <next> first.";
+    public static String downgrade = "§cYou cannot downgrade your rank.";
+    public static String evolveError = "§cYou cannot evolve to this rank.";
+    public static String requirementError = "§cYou need to complete the requirements to evolve.";
 
     public static String SQLiteSuccess = "§aSQLite connection completed.";
     public static String SQLiteError = "§cCould not start SQLite.";
@@ -48,9 +45,11 @@ public class Lang {
     public static boolean first_join = true;
     public static boolean clear_chat = true;
 
-    public static SoundsAPI evolve_sound = SoundsAPI.LEVEL_UP;
-    public static SoundsAPI evolve_global_sound = SoundsAPI.AMBIENCE_THUNDER;
-    public static SoundsAPI evolve_error_sound = SoundsAPI.NOTE_BASS;
+    public static int barsize = 10;
+    public static String bar = "■";
+    public static String color1 = "&a";
+    public static String color2 = "&7";
+
     public static SoundsAPI reset_sound = SoundsAPI.BAT_TAKEOFF;
     public static SoundsAPI reset_sound_error = SoundsAPI.NOTE_BASS;
 
@@ -75,6 +74,7 @@ public class Lang {
         cantJump = convert(Objects.requireNonNull(config.getString("cant-jump")));
         downgrade = convert(Objects.requireNonNull(config.getString("downgrade")));
         evolveError = convert(Objects.requireNonNull(config.getString("evolve-error")));
+        requirementError = convert(Objects.requireNonNull(config.getString("requirement-error")));
 
         SQLiteSuccess = convert(Objects.requireNonNull(config.getString("sqlite-sucess")));
         SQLiteError = convert(Objects.requireNonNull(config.getString("sqlite-error")));
@@ -95,9 +95,6 @@ public class Lang {
         if(!file.exists()){Main.plugin.saveResource("settings.yml",true);}
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-        evolve_sound = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound")));
-        evolve_error_sound = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-error-sound")));
-        evolve_global_sound = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-global-sound")));
         reset_sound = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("reset-sound")));
         reset_sound_error = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("reset-sound-error")));
 
@@ -107,6 +104,12 @@ public class Lang {
         joinMessage = Objects.requireNonNull(convert(config.getStringList("join-message.message")));
         first_join = config.getBoolean("join-message.first-join");
         clear_chat = config.getBoolean("join-message.clear-chat");
+
+        barsize = config.getInt("progress-bar.size");
+        bar = convert(config.getString("progress-bar.bar"));
+        color1 = convert(config.getString("progress-bar.color-1"));
+        color2 = convert(config.getString("progress-bar.color-2"));
+
     }
     public static String convert(String m){
         return m.replace("&","§");

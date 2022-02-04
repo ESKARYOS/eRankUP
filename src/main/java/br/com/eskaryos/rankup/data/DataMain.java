@@ -1,6 +1,5 @@
 package br.com.eskaryos.rankup.data;
 
-import br.com.eskaryos.rankup.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

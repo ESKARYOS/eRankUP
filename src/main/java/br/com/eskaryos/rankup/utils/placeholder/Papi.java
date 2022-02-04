@@ -1,4 +1,4 @@
-package br.com.eskaryos.rankup.utils.api;
+package br.com.eskaryos.rankup.utils.placeholder;
 
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
@@ -9,7 +9,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 
 public class Papi extends PlaceholderExpansion {
     @Override
@@ -27,7 +26,7 @@ public class Papi extends PlaceholderExpansion {
         return Main.plugin.getDescription().getVersion();
     }
 
-    public String onPlaceholderRequest(Player p, String s){
+    public String onPlaceholderRequest(Player p, @NotNull String s){
         if(p==null)return "0";
         if(s.equals("rank")){
             return DataMain.getProfile(p.getUniqueId()).getRank().getDisplay();
@@ -37,7 +36,7 @@ public class Papi extends PlaceholderExpansion {
             if(RankMain.getFinalRank().getOrder()>=rank.getOrder()){
                 return Lang.lastRankVariable;
             }
-            return Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1)).getDisplay();
+            return DataMain.getProfile(p.getUniqueId()).getNext().getDisplay();
         }
         return "0";
     }

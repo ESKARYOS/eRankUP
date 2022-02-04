@@ -43,6 +43,9 @@ Rank-Menu:
       rank1:
         rank: default
         slot: 10
+      rank2:
+        rank: stone
+        slot: 11
       close:
         display: "&cClose menu"
         material: barrier

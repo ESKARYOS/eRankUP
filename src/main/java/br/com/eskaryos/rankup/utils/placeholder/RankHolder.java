@@ -1,13 +1,13 @@
-package br.com.eskaryos.rankup.utils.api;
+package br.com.eskaryos.rankup.utils.placeholder;
 
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
+import br.com.eskaryos.rankup.requirements.RequirementType;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
 
 public class RankHolder {
 
@@ -23,10 +23,14 @@ public class RankHolder {
         }
         if(m.contains("<next>")){
             Rank rank = DataMain.getProfile(p.getUniqueId()).getRank();
-            if(RankMain.getFinalRank().getOrder()>=rank.getOrder()){
+            if(rank.getOrder() >= RankMain.getFinalRank().getOrder()){
                 message=  message.replace("<next>", Lang.lastRankVariable);
             }else{
-                message = m.replace("<next>",Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1)).getDisplay());
+                if(DataMain.getProfile(p.getUniqueId()).getNext()!=null){
+                    message = m.replace("<next>",DataMain.getProfile(p.getUniqueId()).getNext().getDisplay());
+                }else{
+                    message = message.replace("<next>","§cERROR");
+                }
             }
         }
         return PlaceholderAPI.setPlaceholders(p,message);

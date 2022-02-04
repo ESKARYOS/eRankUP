@@ -1,4 +1,4 @@
-package br.com.eskaryos.rankup.utils;
+package br.com.eskaryos.rankup.utils.bukkit;
 
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.Material;

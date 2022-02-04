@@ -2,7 +2,9 @@ package br.com.eskaryos.rankup.ranks;
 
 
 import br.com.eskaryos.rankup.menu.Menu;
-import br.com.eskaryos.rankup.utils.api.RankHolder;
+import br.com.eskaryos.rankup.requirements.Requirement;
+import br.com.eskaryos.rankup.requirements.RequirementType;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 @Getter@Setter
 public class Rank {
@@ -28,11 +27,12 @@ public class Rank {
     private SoundsAPI evolveSoundAll;
     private SoundsAPI evolveSoundError;
 
-
     private List<String> evolveMessage = new ArrayList<>();;
     private List<String> evolveMessageAll = new ArrayList<>();
 
     private List<String> commands = new ArrayList<>();
+
+    private Map<RequirementType,List<Requirement>> requirements;
 
     private ItemStack rankIcon;
     private ItemStack rankIconCompleted;
@@ -43,7 +43,33 @@ public class Rank {
         this.name = name;
         this.display = display;
         this.order = order;
+        requirements = new HashMap<>();
+        requirements.put(RequirementType.CRAFT,new ArrayList<>());
+        requirements.put(RequirementType.MINE,new ArrayList<>());
+        requirements.put(RequirementType.PICKUP,new ArrayList<>());
+        requirements.put(RequirementType.PLACE,new ArrayList<>());
+        requirements.put(RequirementType.KILL,new ArrayList<>());
     }
+    public int getTotalMax(){
+        int value = 0;
+        for(RequirementType type : getRequirements().keySet()){
+            for(Requirement requirement : getRequirements().get(type)){
+                value = value+requirement.getMax();
+            }
+        }
+        return value;
+    }
+    public int getTotalValue(){
+        int value = 0;
+        int total = 0;
+        for(RequirementType type : getRequirements().keySet()){
+            for(Requirement requirement : getRequirements().get(type)){
+                value = value+requirement.getValue();
+            }
+        }
+        return value;
+    }
+
     /**
      * Method to clone rank
      */
@@ -56,6 +82,14 @@ public class Rank {
         r.setEvolveMessageAll(getEvolveMessageAll());
         r.setRankIcon(getRankIcon().clone());
         r.setRankIconCompleted(getRankIconCompleted().clone());
+        r.setCommands(getCommands());
+
+        for(RequirementType type : getRequirements().keySet()){
+            for(Requirement requirement : getRequirements().get(type)){
+                r.getRequirements().get(type).add(requirement);
+            }
+        }
+
         return r;
     }
     /**

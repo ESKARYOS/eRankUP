@@ -10,6 +10,7 @@ public class Profile {
 
     private UUID uuid;
     private Rank rank;
+    private Rank next;
 
 
     public Profile(UUID uuid, Rank rank) {
@@ -35,5 +36,13 @@ public class Profile {
 
     public void setUUID(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public Rank getNext() {
+        return next;
+    }
+
+    public void setNext(Rank next) {
+        this.next = next;
     }
 }

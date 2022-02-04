@@ -1,9 +1,4 @@
-#Sound that is played when leveling up
-evolve-sound: LEVEL_UP
-#Sound that is played for every server when leveling up
-evolve-global-sound: AMBIENCE_THUNDER
-#Sound that is changed when it is not possible to evolve
-evolve-error-sound: NOTE_BASS
+
 #Sound that is played when resetting rank
 reset-sound: BAT_TAKEOFF
 #Sound that is played when unable to set a rank
@@ -15,6 +10,11 @@ chat: true
 #Server chat format
 chat-format: "<rank><player> &7>> &r<message>"
 
+progress-bar:
+  bar: "\u25A0"
+  size: 10
+  color-1: "&a"
+  color-2: "&7"
 #Welcome message for player
 join-message:
   #Set true if you want the welcome message to be sent only on the first login.
