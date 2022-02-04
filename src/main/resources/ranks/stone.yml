@@ -1,0 +1,157 @@
+#Rank name, do not use cores or symbols, this name will be used as the rank identifier.
+name: stone
+#This is the display name of the rank, here you can use colors and symbols.
+display: "&a[Stone] "
+#This is the rank order, set 0 for the starting rank, the higher the rank the more advanced the rank,
+#if there is any rank with the same rank it will not be loaded.
+order: 1
+
+#=======================================================================================================================
+#To find out which sounds to use, open the help.yml file
+
+#This sound will only be played for the player when leveling up.Set DISABLED to mute the sound
+evolve-sound: LEVEL_UP
+
+#This sound will be changed when it is not possible to evolve your rank.Set DISABLED to mute the sound
+evolve-sound-error: NOTE_BASS
+
+#This sound will be played for everyone when you level up,Leave empty to remove sound.Set DISABLED to mute the sound
+evolve-sound-global: AMBIENCE_THUNDER
+
+#=======================================================================================================================
+
+#Message that will be sent to the player when evolving their rank
+evolve-message:
+  - ''
+  - '&aCongratulations you evolved to rank <rank>'
+  - ''
+
+#Message sent to everyone when leveling up
+evolve-message-global:
+  - '<player> &aevolved to rank <rank>'
+
+#Rank menu
+menu:
+  size: 54
+  items:
+    rank:
+      display: "&7[Stone Rank]"
+      slot: 13
+      material: stone
+      data: 0
+      ammount: 1
+      lore:
+        - '&7You will earn this by evolving.'
+        - ''
+        - '&8 5x - Golden Apple'
+        - '&8 1x - Diamond Helmet'
+        - '&8 1x - Diamond Chestplate'
+        - '&8 1x - Diamond Leggings'
+        - '&8 1x - Diamond Boots'
+        - ''
+        - '&7You progress: %bar_all%'
+        - ''
+    requirement-1:
+      display: "&aRequirement - #1"
+      slot: 20
+      material: iron_pickaxe
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to mine the following block.'
+        - ''
+        - '&7Mine: &6100x - Stone'
+        - ''
+        - '&7Mined: &e%value_mine_0%'
+        - '&7Progress: %bar_mine_0%'
+    requirement-2:
+      display: "&aRequirement - #2"
+      slot: 21
+      material: 342
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to kill the following.'
+        - ''
+        - '&7Kill: &c50x - Zombie'
+        - ''
+        - '&7Dead zombies: &e%value_kill_0%'
+        - '&7Progress: %bar_kill_0%'
+    evolve:
+      display: "&aClick to evolve"
+      slot: 31
+      material: 384
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click here to evolve'
+        - '&7to rank <next>'
+    back:
+      display: "&ePrevious page"
+      slot: 45
+      material: arrow
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click to go back to main page'
+    close:
+      display: "&eClose menu"
+      slot: 49
+      material: barrier
+      data: 0
+      ammount: 1
+      lore:
+        - '&7Click to go back to main page'
+#Rank icon
+icon:
+  display: "&c[Stone]"
+  material: stone
+  data: 0
+  ammount: 1
+  lore:
+    - '&7This is the default rank'
+    - '&7they all start with s rank.'
+    - ''
+    - '&7Status: &cIncomplete'
+    - '&7Progress: %bar_all%'
+    - ''
+    - '&eClick to open menu'
+#Rank icon completed
+icon-completed:
+  display: "&a[Stone]"
+  material: stone
+  data: 0
+  ammount: 1
+  lore:
+    - '&7This is the default rank'
+    - '&7they all start with s rank.'
+    - ''
+    - '&7Status: &aCompleted'
+
+#Commands that will be executed when evolving in rank.
+#To give an item use              give: -material -ammount -data -display -lore[line 1] -lore[line 2]....
+#To run a command use             console: <command>
+#To send broadcast message use    bc: <message>
+#To send message use              message: <message>
+#Use <player> to identify the player
+commands:
+  - 'give: -golden_apple -1 -1'
+  - 'give: -diamond_helmet -1 -0'
+  - 'give: -diamond_chestplate -1 -0'
+  - 'give: -diamond_leggings -1 -0'
+  - 'give: -diamond_boots -1 -0'
+
+requirements:
+  mine_stone:
+    type: MINE
+    value: 100
+    item:
+      material: stone
+      data: 0
+      ammount: 1
+  kill_zombie:
+    type: KILL
+    value: 50
+    entity: ZOMBIE
