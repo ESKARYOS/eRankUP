@@ -4,6 +4,7 @@ import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.utils.api.EnchantAPI;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import com.google.common.io.Files;
+import com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -25,6 +27,7 @@ import java.util.regex.Pattern;
 import static org.bukkit.ChatColor.COLOR_CHAR;
 
 public class JavaUtils {
+
 
     public String hex(String startTag, String endTag, String message)
     {
@@ -55,7 +58,9 @@ public class JavaUtils {
 
         file.delete();
     }
-
+    public static ItemStack getConfigItem(String line) {
+        return SkullCreator.itemFromUrl("http://textures.minecraft.net/texture/" + line);
+    }
     public static <T> List<T> misturar(List<T> lista) {
         List<T> sorted = new ArrayList<>(lista);
         Collections.shuffle(sorted);

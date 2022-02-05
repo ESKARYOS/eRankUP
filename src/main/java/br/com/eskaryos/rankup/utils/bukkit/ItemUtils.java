@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
@@ -15,19 +16,31 @@ import java.util.Locale;
 public class ItemUtils {
 
     public static ItemStack getItem(YamlConfiguration config,String key){
-        Material material = Material.valueOf(config.getString(key+".material").toUpperCase(Locale.ROOT));
-        int ammount = config.getInt(key+".ammount");
-        int data = config.getInt(key+".data");
-        String display = config.getString(key+".display").replace("&","§");
+        ItemStack item;
+        String display = config.getString(key + ".display").replace("&", "§");
         List<String> lore = new ArrayList<>();
-        for(String s : config.getStringList(key+".lore")){
-            lore.add(s.replace("&","§"));
+        for (String s : config.getStringList(key + ".lore")) {
+            lore.add(s.replace("&", "§"));
         }
-        ItemStack item = new ItemStack(material,ammount,(short)data);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(display);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
+
+        if(config.getString(key+".material").contains("head")){
+            String texture = config.getString(key + ".material").split(":")[1];
+            item = JavaUtils.getConfigItem(texture);
+            SkullMeta meta = (SkullMeta) item.getItemMeta();
+            meta.setDisplayName(display);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }else{
+            Material material = Material.matchMaterial(config.getString(key + ".material").toUpperCase(Locale.ROOT));
+            int ammount = config.getInt(key + ".ammount");
+            int data = config.getInt(key + ".data");
+            item = new ItemStack(material, ammount, (short) data);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(display);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+
         return item;
     }
     public static boolean hasItem(Player p, ItemStack item, int ammount) {

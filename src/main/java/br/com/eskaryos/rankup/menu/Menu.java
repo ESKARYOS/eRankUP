@@ -3,6 +3,7 @@ package br.com.eskaryos.rankup.menu;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
+import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +37,7 @@ public class Menu {
     public Inventory getMenu(Player p){
         Inventory inv = Bukkit.createInventory(p,getSlots(),getTitle());
         Map<String,ItemStack> list = fixItems(p);
+
         for(String key: getItemSlot().keySet()){
             inv.setItem(getItemSlot().get(key),list.get(key));
         }
@@ -82,7 +84,7 @@ public class Menu {
     }
 
     public ItemStack clone(Player p,ItemStack item){
-        ItemStack nItem = new ItemStack(item.getType(),item.getAmount(),item.getDurability());
+        ItemStack nItem = item.clone();
         if(item.hasItemMeta()){
             ItemMeta meta = nItem.getItemMeta();
             if(item.getItemMeta().hasDisplayName()){

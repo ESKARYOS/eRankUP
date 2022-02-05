@@ -3,12 +3,16 @@ package br.com.eskaryos.rankup.menu;
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
+import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
+import br.com.eskaryos.rankup.utils.bukkit.SkullCreator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
 import java.util.*;
@@ -56,7 +60,7 @@ public class RankMenu {
 
         Menu confirmMenu = new Menu(confirmName,confirmSize);
         for(String key : config.getConfigurationSection("Confirm-Menu.items").getKeys(false)){
-            confirmMenu.getItems().put(key,getItem(config,"Confirm-Menu.items."+key));
+            confirmMenu.getItems().put(key, ItemUtils.getItem(config,"Confirm-Menu.items."+key));
             confirmMenu.getItemSlot().put(key,config.getInt("Confirm-Menu.items."+key+".slot"));
         }
 
@@ -71,7 +75,7 @@ public class RankMenu {
                     int slt = config.getInt("Rank-Menu."+key+".items."+key2+".slot");
                     menu.getRanks().add(rank+":"+slt);
                 }else{
-                    menu.getItems().put(key2,getItem(config,"Rank-Menu."+key+".items."+key2));
+                    menu.getItems().put(key2,ItemUtils.getItem(config,"Rank-Menu."+key+".items."+key2));
                     menu.getItemSlot().put(key2,config.getInt("Rank-Menu."+key+".items."+key2+".slot"));
                 }
             }
@@ -95,10 +99,28 @@ public class RankMenu {
     }
 
     public static ItemStack getItem(YamlConfiguration config, String key){
-        Material material = Material.matchMaterial(Objects.requireNonNull(config.getString(key+".material")).toUpperCase(Locale.ROOT));
-        int ammount = config.getInt(key+".ammount");
-        int data = config.getInt(key+".data");
-        ItemStack item = new ItemStack(material,ammount,(short)data);
+        ItemStack item = null;
+        if(config.getString(key+".material").contains("head")){
+            item = JavaUtils.getConfigItem(config.getString(key+".material").split(":")[1]);
+
+            SkullMeta meta = (SkullMeta) item.getItemMeta();
+            if(config.contains(key+".display")){
+                String name = convert(Objects.requireNonNull(config.getString(key+".display")));
+                meta.setDisplayName(name);
+            }
+            if(config.contains(key+".lore")){
+                List<String> lore = convert(config.getStringList(key+".lore"));
+                meta.setLore(lore);
+            }
+            item.setItemMeta(meta);
+            return item;
+        }
+
+        Material material = Material.matchMaterial(Objects.requireNonNull(config.getString(key + ".material")).toUpperCase(Locale.ROOT));
+        int ammount = config.getInt(key + ".ammount");
+        int data = config.getInt(key + ".data");
+        item = new ItemStack(material, ammount, (short) data);
+
         ItemMeta meta = item.getItemMeta();
         if(config.contains(key+".display")){
             String name = convert(Objects.requireNonNull(config.getString(key+".display")));
@@ -111,4 +133,5 @@ public class RankMenu {
         item.setItemMeta(meta);
         return item;
     }
+
 }

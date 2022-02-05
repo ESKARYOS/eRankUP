@@ -1,5 +1,6 @@
 package br.com.eskaryos.rankup.requirements;
 
+import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Profile;
 import br.com.eskaryos.rankup.ranks.Rank;
@@ -14,6 +15,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.List;
 import java.util.Locale;
@@ -69,13 +71,13 @@ public class RequirementMain {
         Material type = block.getType();
         byte data = block.getData();
         if(profile.getNext().getRequirements().get(RequirementType.MINE).isEmpty())return;
-
         for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.MINE)){
             if(requirement.getItem().getType().equals(type) && requirement.getItem().getDurability() ==
             data){
                 if(requirement.getValue()>=requirement.getMax())return;
                 if((requirement.getValue()+1)>requirement.getMax())return;
                 requirement.setValue(requirement.getValue()+1);
+                e.getBlock().setMetadata("mine",new FixedMetadataValue(Main.plugin,true));
                 return;
             }
         }
@@ -116,7 +118,7 @@ public class RequirementMain {
 
 
             for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.KILL)){
-                if(e.getEntity().getType().name().equals(requirement.getEntity())){
+                if(e.getEntity().getType().name().equals(requirement.getEntity().toUpperCase(Locale.ROOT))){
                     if(requirement.getValue()>=requirement.getMax())return;
                     if((requirement.getValue()+1)>requirement.getMax())return;
                     requirement.setValue(requirement.getValue()+1);
@@ -136,7 +138,6 @@ public class RequirementMain {
         Profile profile = DataMain.getProfile(p.getUniqueId());
         if(profile.getNext()==null)return;
         if(profile.getNext().getRequirements().get(RequirementType.PICKUP).isEmpty())return;
-
         for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.PICKUP)){
             if(requirement.getItem().equals(e.getItem().getItemStack())){
                 if(requirement.getValue()>=requirement.getMax())return;
@@ -160,31 +161,34 @@ public class RequirementMain {
         Inventory Inventory = e.getInventory();
         ClickType clickType = e.getClick();
         int realAmount = craftedItem.getAmount();
-
         if(profile.getNext().getRequirements().get(RequirementType.CRAFT).isEmpty())return;
 
         if(clickType.isShiftClick()) {
             int lowerAmount = craftedItem.getMaxStackSize() + 1000;
-            for(ItemStack actualItem : Inventory.getContents())
-            {
-                if(!actualItem.getType().equals(Material.AIR) && lowerAmount > actualItem.getAmount() && !actualItem.getType().equals(craftedItem.getType())) //if slot is not air && lowerAmount is highter than this slot amount && it's not the recipe amount
+            for(ItemStack actualItem : Inventory.getContents()) {
+                if(!actualItem.getType().equals(Material.AIR) && lowerAmount > actualItem.getAmount() && !actualItem.getType().equals(craftedItem.getType())) {
                     lowerAmount = actualItem.getAmount();
+                }
             }
             realAmount = lowerAmount * craftedItem.getAmount();
         }
+
         RequirementType type = RequirementType.CRAFT;
         Rank rank = profile.getNext();
+
         final List<Requirement> requirements = rank.getRequirements().get(type);
         if(requirements.isEmpty())return;
-        for(Requirement requirement : requirements){
-            if(requirement.getItem().equals(e.getRecipe().getResult())){
+        setValueisTrue(requirements,e.getRecipe().getResult(),realAmount);
+    }
+    private static void setValueisTrue(List<Requirement> list,ItemStack item, int realAmount){
+        for(Requirement requirement : list){
+            if(requirement.getItem().isSimilar(item)){
                 if(requirement.getValue()>=requirement.getMax())return;
-                int value;
-                if( (requirement.getValue()+realAmount )>=requirement.getMax()){value = requirement.getMax();}else{
-                    value = requirement.getValue()+realAmount;
+                int var;
+                if((requirement.getValue()+realAmount)>requirement.getMax()){var = requirement.getMax();}else{
+                    var = requirement.getValue()+realAmount;
                 }
-                requirement.setValue(value);
-                return;
+                requirement.setValue(var);
             }
         }
     }
