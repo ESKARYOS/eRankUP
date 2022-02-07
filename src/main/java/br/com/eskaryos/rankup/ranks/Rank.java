@@ -4,6 +4,8 @@ package br.com.eskaryos.rankup.ranks;
 import br.com.eskaryos.rankup.menu.Menu;
 import br.com.eskaryos.rankup.requirements.Requirement;
 import br.com.eskaryos.rankup.requirements.RequirementType;
+import br.com.eskaryos.rankup.utils.api.ActionBar;
+import br.com.eskaryos.rankup.utils.api.Title;
 import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import lombok.Getter;
@@ -30,6 +32,11 @@ public class Rank {
     private List<String> evolveMessage = new ArrayList<>();;
     private List<String> evolveMessageAll = new ArrayList<>();
 
+    private String evolveTitle;
+    private String evolveSubTitle;
+    private String evolveActionbar;
+    private String evolveActionbarAll;
+
     private List<String> commands = new ArrayList<>();
 
     private Map<RequirementType,List<Requirement>> requirements;
@@ -50,6 +57,21 @@ public class Rank {
         requirements.put(RequirementType.PLACE,new ArrayList<>());
         requirements.put(RequirementType.KILL,new ArrayList<>());
     }
+
+    public void sendEvolveBar(Player p){
+        ActionBar.sendActionBar(p,RankHolder.hook(p,evolveActionbar));
+    }
+    public void sendEvolveBarAll(Player p){
+        for(Player g : Bukkit.getOnlinePlayers()){
+            if(p!=g){
+                ActionBar.sendActionBar(g,RankHolder.hook(p,evolveActionbarAll));
+            }
+        }
+    }
+    public void sendEvolveTitle(Player p){
+        Title.sendTitle(p,evolveTitle,evolveSubTitle,0,20*5,0);
+    }
+
     public int getTotalMax(){
         int value = 0;
         for(RequirementType type : getRequirements().keySet()){
@@ -61,7 +83,6 @@ public class Rank {
     }
     public int getTotalValue(){
         int value = 0;
-        int total = 0;
         for(RequirementType type : getRequirements().keySet()){
             for(Requirement requirement : getRequirements().get(type)){
                 value = value+requirement.getValue();

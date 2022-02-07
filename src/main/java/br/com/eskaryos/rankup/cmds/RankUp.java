@@ -2,6 +2,7 @@ package br.com.eskaryos.rankup.cmds;
 
 
 import br.com.eskaryos.rankup.Main;
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
@@ -36,6 +37,7 @@ public class RankUp extends Command {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             RankMenu.rankMenu(p,1);
+
         }
 
         return false;

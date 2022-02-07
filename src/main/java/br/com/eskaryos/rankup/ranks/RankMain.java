@@ -13,6 +13,7 @@ import br.com.eskaryos.rankup.utils.bukkit.Logger;
 import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -148,6 +149,9 @@ public class RankMain {
             evolve.sendAllEvolveMessage(p);
             evolve.sendEvolveSound(p);
             evolve.sendAllEvolveSound();
+            evolve.sendEvolveBar(p);
+            evolve.sendEvolveBarAll(p);
+            evolve.sendEvolveTitle(p);
 
             evolve.executeCommand(p);
         }
@@ -199,6 +203,11 @@ public class RankMain {
 
                     List<String> evolveMessage = convert(config.getStringList("evolve-message"));
                     List<String> evolveMessageAll = convert(config.getStringList("evolve-message-global"));
+
+                    rank.setEvolveActionbar(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("action-bar"))));
+                    rank.setEvolveActionbarAll(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("action-bar-all"))));
+                    rank.setEvolveTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("title"))));
+                    rank.setEvolveSubTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("subtitle"))));
 
                     rank.setRankIcon(icon);
                     rank.setRankIconCompleted(iconCompleted);

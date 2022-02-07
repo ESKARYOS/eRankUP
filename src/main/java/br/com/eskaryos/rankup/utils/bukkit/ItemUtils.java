@@ -1,6 +1,8 @@
 package br.com.eskaryos.rankup.utils.bukkit;
 
+import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -16,13 +18,12 @@ import java.util.Locale;
 public class ItemUtils {
 
     public static ItemStack getItem(YamlConfiguration config,String key){
-        ItemStack item;
+        ItemStack item = null;
         String display = config.getString(key + ".display").replace("&", "§");
         List<String> lore = new ArrayList<>();
         for (String s : config.getStringList(key + ".lore")) {
             lore.add(s.replace("&", "§"));
         }
-
         if(config.getString(key+".material").contains("head")){
             String texture = config.getString(key + ".material").split(":")[1];
             item = JavaUtils.getConfigItem(texture);

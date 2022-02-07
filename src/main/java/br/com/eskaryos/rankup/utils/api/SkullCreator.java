@@ -1,4 +1,4 @@
-package br.com.eskaryos.rankup.utils.bukkit;
+package br.com.eskaryos.rankup.utils.api;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;

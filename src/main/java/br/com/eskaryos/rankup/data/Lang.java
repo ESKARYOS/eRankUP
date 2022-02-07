@@ -1,15 +1,18 @@
 package br.com.eskaryos.rankup.data;
 
 import br.com.eskaryos.rankup.Main;
+import br.com.eskaryos.rankup.utils.api.BannerCreator;
+import br.com.eskaryos.rankup.utils.api.PatternTypes;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import org.bukkit.DyeColor;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.Hash;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Lang {
 
@@ -29,6 +32,7 @@ public class Lang {
     public static String TableCreated = "§aSQLite table created.";
     public static String TableNoCreated = "§cSQLite table not created.";
     public static String PlayerNoLoaded = "§cThe player §c<player> was not loaded.";
+
 
     public static String events_sucess = "§aAll events were successfully loaded.";
     public static String events_error = "§cEvents were not loaded.";
@@ -53,15 +57,32 @@ public class Lang {
     public static SoundsAPI reset_sound = SoundsAPI.BAT_TAKEOFF;
     public static SoundsAPI reset_sound_error = SoundsAPI.NOTE_BASS;
 
+    public static Map<String, BannerCreator> banners = new HashMap<>();
+
     public static void LoadFolders(){
         LoadSettings();
         LoadLang();
-
+        LoadBanners();
         File file = new File(Main.plugin.getDataFolder(),"help.yml");
         if(!file.exists()){Main.plugin.saveResource("help.yml",true);}
     }
 
-
+    public static void LoadBanners(){
+        File file = new File(Main.plugin.getDataFolder(),"banners.yml");
+        if(!file.exists()){Main.plugin.saveResource("banners.yml",true);}
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        for(String key : config.getConfigurationSection("Banners").getKeys(false)){
+            DyeColor color = DyeColor.valueOf(config.getString("Banners."+key+".BaseColor").toUpperCase(Locale.ROOT));
+            List<Pattern> patternList = new ArrayList<>();
+            for(String pattern: config.getStringList("Banners."+key+".Patterns")){
+                DyeColor c = DyeColor.valueOf(pattern.split(":")[0].toUpperCase(Locale.ROOT));
+                PatternType p = PatternTypes.getTypeByName(pattern.split(":")[1]);
+                patternList.add(new Pattern(c,p));
+            }
+            BannerCreator banner = new BannerCreator(color,patternList);
+            banners.put(key,banner);
+        }
+    }
     public static void LoadLang(){
         File file = new File(Main.plugin.getDataFolder(),"lang.yml");
         if(!file.exists()){Main.plugin.saveResource("lang.yml",true);}

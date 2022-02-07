@@ -1,0 +1,56 @@
+#Fully color Field/Base ()
+
+#bl or SQUARE_BOTTOM_LEFT      =           Bottom Left Corner
+#br or SQUARE_BOTTEM_RIGHT     =           Bottom Right Corner
+#tl or SQUARE_TOP_LEFT         =           Top Left Corner
+#tr or SQUARE_TOP_RIGHT        =           Top Right Corner
+#bs or STRIPE_BOTTOM           =           Bottom Stripe
+#ts or STRIPE_TOP              =           Top Stripe
+#ls or STRIPE_LEFT             =           Left Stripe
+#rs or STRIPE_RIGHT            =           Right Stripe
+#cs or STRIPE_CENTER           =           Center Stripe (Vertical)
+#ms or STRIPE_MIDDLE           =           Middle Stripe (Horizontal)
+#drs or STRIPE_DOWNRIGHT       =           Down Right Stripe
+#dls or STRIPE_DOWNLEFT        =           Down Left Stripe
+#ss or STRIPE_SMALL            =           Small (Vertical) Stripes
+#cr or CROSS                   =           Diagonal Cross
+#sc or STRAIGHT_CROSS          =           Square Cross
+#bt or TRIANGLE_BOTTOM         =           Bottom Triangle
+#tt or TRIANGLE_TOP            =           Top Triangle
+#bts or TRIANGLES_BOTTOM       =           Bottom Triangle Sawtooth
+#tts or TRIANGLES_TOP          =           Top Triangle Sawtooth
+#ld or DIAGONAL_LEFT           =           Left of Diagonal
+#rd or DIAGONAL_RIGHT          =           Right of Diagonal
+#lud or DIAGONAL_LEFT_MIRROR   =           Left of upside-down Diagonal
+#rud or DIAGONAL_RIGHT_MIRROR  =           Right of upside-down Diagonal
+#mc or CIRCLE_MIDDLE           =           Middle Circle
+#mr or RHOMBUS_MIDDLE          =           Middle Rhombus
+#vh or HALF_VERTICAL           =           Vertical Half (left)
+#hh or HALF_HORIZONTAL         =           Horizontal Half (top)
+#vhr or HALF_VERTICAL_MIRROR   =           Vertical Half (right)
+#hhb or HALF_HORIZONTAL_MIRROR =           Horizontal Half (bottom)
+#bo or BORDER                  =           Border
+#cbo or CURLY_BORDER           =           Curly Border
+#cre or CREEPER                =           Creeper
+#gra or GRADIENT               =           Gradient
+#gru or GRADIENT_UP            =           Gradient upside-down
+#bri or BRICKS                 =           Bricks
+#sku or SKULL                  =           Skull
+#flo or FLOWER                 =           Flower
+#moj or MOJANG                 =           Mojang
+
+#https://minecraft.fandom.com/wiki/Banner/Patterns
+
+
+Banners:
+  magic-ender-trident:
+    BaseColor: BLACK
+    Patterns:
+      - 'BLUE:SQUARE_TOP_RIGHT'
+      - 'MAGENTA:CROSS'
+      - 'BLACK:BRICKS'
+      - 'PURPLE:FLOWER'
+      - 'MAGENTA:FLOWER'
+      - 'BLACK:TRIANGLE_TOP'
+      - 'BLACK:STRIPE_SMALL'
+      - 'BLACK:BORDER'

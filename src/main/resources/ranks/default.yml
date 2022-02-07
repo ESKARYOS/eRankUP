@@ -30,6 +30,10 @@ evolve-message:
 evolve-message-global:
   - '<player> &aevolved to rank <rank>'
 
+action-bar: "&aYou evolved to rank <rank>"
+action-bar-all: "<player> &aevolved to rank <rank>"
+title: "<rank>"
+subtitle: "&fyou evolved"
 #Rank menu
 menu:
   size: 54

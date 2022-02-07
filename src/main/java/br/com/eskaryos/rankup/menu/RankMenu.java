@@ -5,12 +5,12 @@ import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
-import br.com.eskaryos.rankup.utils.bukkit.SkullCreator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -115,7 +115,6 @@ public class RankMenu {
             item.setItemMeta(meta);
             return item;
         }
-
         Material material = Material.matchMaterial(Objects.requireNonNull(config.getString(key + ".material")).toUpperCase(Locale.ROOT));
         int ammount = config.getInt(key + ".ammount");
         int data = config.getInt(key + ".data");
