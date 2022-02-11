@@ -3,7 +3,7 @@ package br.com.eskaryos.rankup.menu;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,10 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter@Setter
 public class Menu {
@@ -28,19 +25,19 @@ public class Menu {
     private Map<String, Integer> itemSlot = new HashMap<>();
     private String title;
     private int slots;
+    int page;
 
-    public Menu(String title,int slots){
+    public Menu(String title,int slots,int page){
         this.title = title;
         this.slots = slots;
+        this.page = page;
     }
 
     public Inventory getMenu(Player p){
         Inventory inv = Bukkit.createInventory(p,getSlots(),getTitle());
         Map<String,ItemStack> list = fixItems(p);
 
-        for(String key: getItemSlot().keySet()){
-            inv.setItem(getItemSlot().get(key),list.get(key));
-        }
+        for(String key: getItemSlot().keySet()){inv.setItem(getItemSlot().get(key),list.get(key));}
         int order = DataMain.getProfile(p.getUniqueId()).getRank().getOrder();
         for(String name : getRanks()){
             Rank rank = RankMain.getRankByName(name.split(":")[0]);
@@ -66,15 +63,16 @@ public class Menu {
 
     public ItemStack clone(Player p,String itemNovo){
         ItemStack item = getItems().get(itemNovo);
-        ItemStack nItem = new ItemStack(item.getType(),item.getAmount(),item.getDurability());
+        ItemStack nItem = item.clone();
         if(item.hasItemMeta()){
             ItemMeta meta = nItem.getItemMeta();
-            if(item.getItemMeta().hasDisplayName()){
-                meta.setDisplayName(RankHolder.hook(p,item.getItemMeta().getDisplayName()));
+            assert meta != null;
+            if(Objects.requireNonNull(item.getItemMeta()).hasDisplayName()){
+                meta.setDisplayName(RankHolder.hook(p, ColorUtils.translateStringColor(item.getItemMeta().getDisplayName())));
             }
             if(item.getItemMeta().hasLore()){
                 List<String> lore = new ArrayList<>();
-                for(String s : item.getItemMeta().getLore()){lore.add(RankHolder.hook(p,s));}
+                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){lore.add(RankHolder.hook(p,ColorUtils.translateStringColor(s)));}
                 meta.setLore(lore);
             }
 
@@ -87,12 +85,13 @@ public class Menu {
         ItemStack nItem = item.clone();
         if(item.hasItemMeta()){
             ItemMeta meta = nItem.getItemMeta();
-            if(item.getItemMeta().hasDisplayName()){
-                meta.setDisplayName(RankHolder.hook(p,item.getItemMeta().getDisplayName()));
+            assert meta != null;
+            if(Objects.requireNonNull(item.getItemMeta()).hasDisplayName()){
+                meta.setDisplayName(RankHolder.hook(p,ColorUtils.translateStringColor(item.getItemMeta().getDisplayName())));
             }
             if(item.getItemMeta().hasLore()){
                 List<String> lore = new ArrayList<>();
-                for(String s : item.getItemMeta().getLore()){lore.add(RankHolder.hook(p,s));}
+                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){lore.add(RankHolder.hook(p,ColorUtils.translateStringColor(s)));}
                 meta.setLore(lore);
             }
 

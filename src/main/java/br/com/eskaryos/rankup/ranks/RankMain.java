@@ -8,23 +8,23 @@ import br.com.eskaryos.rankup.menu.Menu;
 import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.requirements.Requirement;
 import br.com.eskaryos.rankup.requirements.RequirementType;
+import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
 import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
-import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 
 import java.io.File;
 import java.util.*;
 
 public class RankMain {
 
-    private static Map<String,Rank> rankMap = new HashMap<>();
+    private static final Map<String,Rank> rankMap = new HashMap<>();
 
     /**
      * Return Map<String,Rank>
@@ -42,10 +42,7 @@ public class RankMain {
 
     public static boolean isLastRank(Player p){
         Profile profile = DataMain.getProfile(p.getUniqueId());
-        if(profile.getRank().getOrder()>=RankMain.getFinalRank().getOrder()){
-            return true;
-        }
-        return false;
+        return profile.getRank().getOrder() >= RankMain.getFinalRank().getOrder();
     }
 
     /**
@@ -59,7 +56,7 @@ public class RankMain {
 
     /**
      * Return default rank
-     * @return
+     * @return default rank
      */
     public static Rank getDefaultRank(){
         return getRankById(0);
@@ -67,7 +64,7 @@ public class RankMain {
 
     /***
      * Return final rank
-     * @return
+     * @return final rank
      */
     public static Rank getFinalRank(){
         return getRankById(getAllRanks().size()-1);
@@ -76,7 +73,7 @@ public class RankMain {
     /***
      * Return rank by position
      * @param id Rank position
-     * @return
+     * @return Rank by id
      */
     public static Rank getRankById(int id){
         for(Rank r : getAllRanks()){
@@ -112,39 +109,11 @@ public class RankMain {
         Rank rank = DataMain.getProfile(uuid).getRank();
         Player p = Bukkit.getPlayer(uuid);
         assert p!=null;
-        /**
-        *Check if rank to evolve is a last rank
-         */
-        if(isLastRank(p)){
-            p.sendMessage(RankHolder.hook(p,Lang.last_rank));
-            rank.sendEvolveSoundError(p);
-            return;
-        }
-        /***
-         * Check if player rank is bigger then next rank
-         */
-        if(rank.getOrder()>evolve.getOrder()){
-            p.sendMessage(RankHolder.hook(p,Lang.downgrade));
-            rank.sendEvolveSoundError(p);
-            return;
-        }
-        /***
-         * Check if the next rank has been skipped
-         */
-        if(rank.getOrder()-evolve.getOrder()>1){
-            p.sendMessage(RankHolder.hook(p,Lang.cantJump));
-            rank.sendEvolveSoundError(p);
-            return;
-        }
-        /***
-         * Execute evolve
-         */
-        if(hascompleted(p)){
-            DataMain.getProfile(uuid).setRank(clone(evolve));
-            if(evolve.getOrder()<RankMain.getFinalRank().getOrder()){
-                DataMain.getProfile(p.getUniqueId()).setNext(RankMain.getRankById(evolve.getOrder()+1));
-            }
-
+        if(isLastRank(p)){p.sendMessage(RankHolder.hook(p,Lang.last_rank));rank.sendEvolveSoundError(p);return;}
+        if(rank.getOrder()>evolve.getOrder()){p.sendMessage(RankHolder.hook(p,Lang.downgrade));rank.sendEvolveSoundError(p);return;}
+        if(rank.getOrder()-evolve.getOrder()>1){p.sendMessage(RankHolder.hook(p,Lang.cantJump));rank.sendEvolveSoundError(p);return;}
+        if(hascompleted(p)){DataMain.getProfile(uuid).setRank(clone(evolve));
+            if(evolve.getOrder()<RankMain.getFinalRank().getOrder()){DataMain.getProfile(p.getUniqueId()).setNext(RankMain.getRankById(evolve.getOrder()+1));}
             evolve.sendEvolveMessage(p);
             evolve.sendAllEvolveMessage(p);
             evolve.sendEvolveSound(p);
@@ -152,27 +121,19 @@ public class RankMain {
             evolve.sendEvolveBar(p);
             evolve.sendEvolveBarAll(p);
             evolve.sendEvolveTitle(p);
-
             evolve.executeCommand(p);
         }
     }
 
     /***
      * Clone  rank to avoid bugs
-     * @param rank
+     * @param rank rank to clone
      * @return return rank cloned;
      */
     public static Rank clone(Rank rank){
         return rank.clone();
     }
 
-    /**
-     * Load all ranks from folder
-     */
-
-    public static void loadDefault(){
-        File path = new File(Main.plugin.getDataFolder() + "/ranks");
-    }
     public static void loadRank(){
         File path = new File(Main.plugin.getDataFolder() + "/ranks");
         if(!path.exists()){
@@ -188,9 +149,9 @@ public class RankMain {
         for(File file : list){
             if(file.getName().endsWith(".yml")){
                 try{
-                    YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                    String display = config.getString("display").replace("&","§");
-                    String name = config.getString("name").replace("&","§");
+                    YamlConfiguration config = JavaUtils.loadConfigUTF8(file);
+                    String display = ColorUtils.translateStringColor(config.getString("display"));
+                    String name = ColorUtils.translateStringColor(config.getString("name"));
                     int order = config.getInt("order");
 
                     Rank rank = new Rank(name,display,order);
@@ -201,13 +162,12 @@ public class RankMain {
                     SoundsAPI evolveAll = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound-global")));
                     SoundsAPI evolveError = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound-error")));
 
-                    List<String> evolveMessage = convert(config.getStringList("evolve-message"));
-                    List<String> evolveMessageAll = convert(config.getStringList("evolve-message-global"));
-
-                    rank.setEvolveActionbar(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("action-bar"))));
-                    rank.setEvolveActionbarAll(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("action-bar-all"))));
-                    rank.setEvolveTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("title"))));
-                    rank.setEvolveSubTitle(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("subtitle"))));
+                    List<String> evolveMessage = ColorUtils.translateStringColor(config.getStringList("evolve-message"));
+                    List<String> evolveMessageAll = ColorUtils.translateStringColor(config.getStringList("evolve-message-global"));
+                    rank.setEvolveActionbar(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("action-bar"))));
+                    rank.setEvolveActionbarAll(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("action-bar-all"))));
+                    rank.setEvolveTitle(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("title"))));
+                    rank.setEvolveSubTitle(ColorUtils.translateStringColor( Objects.requireNonNull(config.getString("subtitle"))));
 
                     rank.setRankIcon(icon);
                     rank.setRankIconCompleted(iconCompleted);
@@ -220,21 +180,26 @@ public class RankMain {
 
                     rank.setEvolveMessageAll(evolveMessageAll);
                     rank.setEvolveMessage(evolveMessage);
-                    Menu menu = new Menu(display,config.getInt("menu.size"));
-                    for(String key : config.getConfigurationSection("menu.items").getKeys(false)){
+                    Menu menu = new Menu(display,config.getInt("menu.size"),1);
+                    for(String key : Objects.requireNonNull(config.getConfigurationSection("menu.items")).getKeys(false)){
                         menu.getItems().put(key, RankMenu.getItem(config,"menu.items."+key));
                         menu.getItemSlot().put(key,config.getInt("menu.items."+key+".slot"));
                     }
-                    for(String key : config.getConfigurationSection("requirements").getKeys(false)){
+                    for(String key : Objects.requireNonNull(config.getConfigurationSection("requirements")).getKeys(false)){
                         RequirementType type = RequirementType.valueOf(config.getString("requirements."+key+".type"));
+                        List<String> completedMessage = ColorUtils.translateStringColor(config.getStringList("requirements."+key+".message"));
+                        SoundsAPI sound = SoundsAPI.valueOf(config.getString("requirements."+key+".sound"));
+                        String title = ColorUtils.translateStringColor(config.getString("requirements."+key+".title"));
+                        String bar = ColorUtils.translateStringColor(config.getString("requirements."+key+".actionbar"));
+
                         if(type != RequirementType.KILL){
                            ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
                            int max = config.getInt("requirements."+key+".value");
-                           rank.getRequirements().get(type).add(new Requirement(item,null,max));
+                           rank.getRequirements().get(type).add(new Requirement(item,null,max,completedMessage,title,bar,sound));
                         }else{
                             String entity = config.getString("requirements."+key+".entity");
                             int max = config.getInt("requirements."+key+".value");
-                            rank.getRequirements().get(type).add(new Requirement(null,entity,max));
+                            rank.getRequirements().get(type).add(new Requirement(null,entity,max,completedMessage,title,bar,sound));
                         }
 
                     }
@@ -249,17 +214,9 @@ public class RankMain {
                         getRankMap().put(name,rank);
                     }
                 }catch (Exception e){
-                    Logger.log(Logger.LogLevel.ERROR,e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
-    }
-
-
-
-    public static List<String> convert(List<String> l1){
-        List<String> list = new ArrayList<>();
-        for(String s : l1){list.add(s.replace("&","§"));}
-        return list;
     }
 }

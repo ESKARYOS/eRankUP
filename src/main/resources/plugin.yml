@@ -4,3 +4,6 @@ main: br.com.eskaryos.rankup.Main
 authors: [ ESKARYOS ]
 softdepend:
   - PlaceHolderAPI
+commands:
+  rank:
+    aliases: [evolve,rankup,rk]

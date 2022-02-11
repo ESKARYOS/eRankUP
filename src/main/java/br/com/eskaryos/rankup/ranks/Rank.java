@@ -29,7 +29,7 @@ public class Rank {
     private SoundsAPI evolveSoundAll;
     private SoundsAPI evolveSoundError;
 
-    private List<String> evolveMessage = new ArrayList<>();;
+    private List<String> evolveMessage = new ArrayList<>();
     private List<String> evolveMessageAll = new ArrayList<>();
 
     private String evolveTitle;
@@ -53,7 +53,7 @@ public class Rank {
         requirements = new HashMap<>();
         requirements.put(RequirementType.CRAFT,new ArrayList<>());
         requirements.put(RequirementType.MINE,new ArrayList<>());
-        requirements.put(RequirementType.PICKUP,new ArrayList<>());
+        requirements.put(RequirementType.FISH,new ArrayList<>());
         requirements.put(RequirementType.PLACE,new ArrayList<>());
         requirements.put(RequirementType.KILL,new ArrayList<>());
     }
@@ -69,7 +69,7 @@ public class Rank {
         }
     }
     public void sendEvolveTitle(Player p){
-        Title.sendTitle(p,evolveTitle,evolveSubTitle,0,20*5,0);
+        Title.sendTitle(p,RankHolder.hook(p,evolveTitle),RankHolder.hook(p,evolveSubTitle),0,20*5,0);
     }
 
     public int getTotalMax(){
@@ -94,7 +94,7 @@ public class Rank {
     /**
      * Method to clone rank
      */
-    public Rank clone(){
+    public Rank clone() {
         Rank r = new Rank(getName(),getDisplay(),getOrder());
         r.setEvolveSound(getEvolveSound());
         r.setEvolveSoundAll(getEvolveSoundAll());
@@ -128,7 +128,7 @@ public class Rank {
     }
     /**
      * Method to send player evolve message
-     * @param p
+     * @param p Player to send Message
      */
     public void sendEvolveMessage(Player p){
         for(String message : evolveMessage){
@@ -147,7 +147,7 @@ public class Rank {
     }
     /**
      * Method to send sound evolve
-     * @param p
+     * @param p Player to send Sound
      */
     public void sendEvolveSound(Player p){
         if(getEvolveSound()==SoundsAPI.DISABLED)return;
@@ -156,7 +156,7 @@ public class Rank {
 
     /**
      * Method to send sound error
-     * @param p
+     * @param p Player to send Message
      */
     public void sendEvolveSoundError(Player p){
         if(getEvolveSoundError()==SoundsAPI.DISABLED)return;
@@ -176,12 +176,14 @@ public class Rank {
             }else if(s.contains("give")){
                 s =s.replace("<player>",p.getDisplayName());
                 String m = s.split(":")[1];
-                String material = m.split("-")[1].toUpperCase(Locale.ROOT).replace(" ","");
+                Material material = Material.matchMaterial(m.split("-")[1].toUpperCase(Locale.ROOT).replace(" ",""));
                 int ammount = Integer.parseInt(m.split("-")[2].replace(" ",""));
                 int data = Integer.parseInt(m.split("-")[3].replace(" ",""));
 
-                ItemStack item = new ItemStack(Material.valueOf(material),ammount,(short)data);
+                assert material != null;
+                ItemStack item = new ItemStack(material,ammount,(short)data);
                 ItemMeta meta = item.getItemMeta();
+                assert meta != null;
                 if(m.split("-").length>4){
                     meta.setDisplayName(m.split("-")[4].replace("&","§"));
                 }

@@ -25,12 +25,14 @@ public final class Main extends JavaPlugin {
         if(setupDependence()){
             try{
                 Logger.log(Logger.LogLevel.OUTLINE, "§a============================================");
+
+                Lang.LoadFolders();
                 RankMain.loadRank();
+                RankMenu.LoadMenus();
                 Listeners.setupListener();
                 Commands.setupCommands();
                 DataMain.SetupData();
-                Lang.LoadFolders();
-                RankMenu.LoadMenus();
+
                 new Papi().register();
                 new PapiRequirements().register();
                 new PapiRequirementsBar().register();

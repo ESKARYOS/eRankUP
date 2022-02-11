@@ -38,7 +38,7 @@ menu:
   size: 54
   items:
     rank:
-      display: "&7[Stone Rank]"
+      display: "&a[Stone Rank]"
       slot: 13
       material: stone
       data: 0
@@ -46,15 +46,15 @@ menu:
       lore:
         - '&7You will earn this by evolving.'
         - ''
-        - '&8 5x - Golden Apple'
-        - '&8 1x - Diamond Helmet'
-        - '&8 1x - Diamond Chestplate'
-        - '&8 1x - Diamond Leggings'
-        - '&8 1x - Diamond Boots'
+        - '&5 5x - Golden Apple'
+        - '&b 1x - Diamond Helmet'
+        - '&b 1x - Diamond Chestplate'
+        - '&b 1x - Diamond Leggings'
+        - '&b 1x - Diamond Boots'
         - ''
         - '&7You progress: %bar_all%'
         - ''
-    requirement-1:
+    requirement_1:
       display: "&aRequirement - #1"
       slot: 20
       material: iron_pickaxe
@@ -71,7 +71,7 @@ menu:
     requirement-2:
       display: "&aRequirement - #2"
       slot: 21
-      material: 342
+      material: head:64528b3229660f3dfab42414f59ee8fd01e80081dd3df30869536ba9b414e089
       data: 0
       ammount: 1
       lore:
@@ -80,12 +80,12 @@ menu:
         - ''
         - '&7Kill: &c50x - Zombie'
         - ''
-        - '&7Dead zombies: &e%value_kill_0%'
-        - '&7Progress: %bar_kill_0%'
+        - '&7Dead zombies: &e%value_fish_0%'
+        - '&7Progress: %bar_fish_0%'
     evolve:
       display: "&aClick to evolve"
       slot: 31
-      material: 384
+      material: head:399ad7a0431692994b6c412c7eafb9e0fc49975240b73a27d24ed797035fb894
       data: 0
       ammount: 1
       lore:
@@ -114,8 +114,8 @@ icon:
   data: 0
   ammount: 1
   lore:
-    - '&7This is the default rank'
-    - '&7they all start with s rank.'
+    - '&7This is the stone rank'
+    - '&7evolve for him.'
     - ''
     - '&7Status: &cIncomplete'
     - '&7Progress: %bar_all%'
@@ -124,13 +124,10 @@ icon:
 #Rank icon completed
 icon-completed:
   display: "&a[Stone]"
-  material: stone
+  material: head:4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4
   data: 0
   ammount: 1
   lore:
-    - '&7This is the default rank'
-    - '&7they all start with s rank.'
-    - ''
     - '&7Status: &aCompleted'
 
 #Commands that will be executed when evolving in rank.
@@ -149,12 +146,27 @@ commands:
 requirements:
   mine_stone:
     type: MINE
-    value: 100
+    value: 5
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #1"
+    message:
+      - '&eYou have completed Requirement #1'
+      - '&ecomplete the other requirements to evolve.'
     item:
       material: stone
       data: 0
       ammount: 1
-  kill_zombie:
-    type: KILL
-    value: 50
-    entity: ZOMBIE
+  fish:
+    type: FISH
+    value: 1
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #2"
+    message:
+      - '&eYou have completed Requirement #2'
+      - '&ecomplete the other requirements to evolve.'
+    item:
+      material: raw_fish
+      data: 0
+      ammount: 1

@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -30,11 +31,11 @@ public class Reset extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String s, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String s, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             if(DataMain.getProfile(p.getUniqueId()).getRank()!=null && DataMain.getProfile(p.getUniqueId()).getRank().getOrder()<=0){
-                p.sendMessage(Lang.rankredefineerror);
+                p.sendMessage(RankHolder.hook(p,Lang.rankredefineerror));
                 JavaUtils.playSound(p,Lang.reset_sound_error,1F,1F);
                 return true;
             }

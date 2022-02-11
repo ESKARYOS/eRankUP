@@ -1,7 +1,0 @@
-Ranks:
-  default:
-    display: "&e[Default] "
-    order: 0
-  teste:
-    display: "&a[Teste] "
-    order: 1

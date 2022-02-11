@@ -3,6 +3,7 @@ package br.com.eskaryos.rankup.utils.api;
 import java.lang.reflect.Constructor;
 
 import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,8 +33,8 @@ public class ActionBar {
     }
 
     public static void sendTitle(Player player, String title, String subtitle, int fadein, int stay, int fadeout) {
-        if (ColorUtils.getVersion().contains("1_8") || ColorUtils.getVersion().contains("1_9") ||
-                ColorUtils.getVersion().contains("1_11")) {
+        if (JavaUtils.getVersion().contains("1_8") || JavaUtils.getVersion().contains("1_9") ||
+                JavaUtils.getVersion().contains("1_11")) {
             title = ChatColor.translateAlternateColorCodes('&', title);
             subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
             Class<?> chatSerializer = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0];
@@ -63,16 +64,16 @@ public class ActionBar {
     }
 
     public static void sendActionBar(Player player, String message) {
-        if (ColorUtils.getVersion().contains("1_17")) {
+        if (JavaUtils.getVersion().contains("1_17")) {
             TextComponent text_component = new TextComponent(message);
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, (BaseComponent)text_component);
             return;
         }
-        if (!ColorUtils.isAbove1_8()) {
+        if (!JavaUtils.isAbove1_8()) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
             return;
         }
-        if (ColorUtils.getVersion().contains("1_13") || ColorUtils.getVersion().contains("1_12")) {
+        if (JavaUtils.getVersion().contains("1_13") || JavaUtils.getVersion().contains("1_12")) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
             return;
         }

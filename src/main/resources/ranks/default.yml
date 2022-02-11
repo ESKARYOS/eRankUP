@@ -23,13 +23,12 @@ evolve-sound-global: AMBIENCE_THUNDER
 #Message that will be sent to the player when evolving their rank
 evolve-message:
   - ''
-  - '&aYou evolved to rank <rank>'
+  - '&aCongratulations you evolved to rank <rank>'
   - ''
 
 #Message sent to everyone when leveling up
 evolve-message-global:
   - '<player> &aevolved to rank <rank>'
-
 action-bar: "&aYou evolved to rank <rank>"
 action-bar-all: "<player> &aevolved to rank <rank>"
 title: "<rank>"
@@ -39,18 +38,40 @@ menu:
   size: 54
   items:
     rank:
-      display: "&e[Grass]"
+      display: "&a[Default Rank]"
       slot: 13
       material: grass
       data: 0
       ammount: 1
       lore:
-        - '&7This is your rank'
-        - '&7next rank <next>'
+        - '&7You will earn this by evolving.'
+        - ''
+        - '&5 5x - Golden Apple'
+        - '&b 1x - Diamond Helmet'
+        - '&b 1x - Diamond Chestplate'
+        - '&b 1x - Diamond Leggings'
+        - '&b 1x - Diamond Boots'
+        - ''
+        - '&7You progress: %bar_all%'
+        - ''
+    requirement_1:
+      display: "&aRequirement - #1"
+      slot: 20
+      material: iron_pickaxe
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to mine the following block.'
+        - ''
+        - '&7Mine: &6100x - Stone'
+        - ''
+        - '&7Mined: &e%value_mine_0%'
+        - '&7Progress: %bar_mine_0%'
     evolve:
-      display: "&eClick to evolve"
+      display: "&aClick to evolve"
       slot: 31
-      material: 384
+      material: head:399ad7a0431692994b6c412c7eafb9e0fc49975240b73a27d24ed797035fb894
       data: 0
       ammount: 1
       lore:
@@ -74,22 +95,29 @@ menu:
         - '&7Click to go back to main page'
 #Rank icon
 icon:
-  display: "&c[Default]"
-  material: grass
+  display: "&e[Default]"
+  material: stone
   data: 0
   ammount: 1
   lore:
     - '&7This is the default rank'
     - '&7they all start with s rank.'
+    - ''
+    - '&7Status: &cIncomplete'
+    - '&7Progress: %bar_all%'
+    - ''
+    - '&eClick to open menu'
 #Rank icon completed
 icon-completed:
   display: "&a[Default]"
-  material: grass
+  material: head:4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4
   data: 0
   ammount: 1
   lore:
     - '&7This is the default rank'
     - '&7they all start with s rank.'
+    - ''
+    - '&7Status: &aCompleted'
 
 #Commands that will be executed when evolving in rank.
 #To give an item use              give: -material -ammount -data -display -lore[line 1] -lore[line 2]....
@@ -99,12 +127,22 @@ icon-completed:
 #Use <player> to identify the player
 commands:
   - 'give: -golden_apple -1 -1'
+  - 'give: -diamond_helmet -1 -0'
+  - 'give: -diamond_chestplate -1 -0'
+  - 'give: -diamond_leggings -1 -0'
+  - 'give: -diamond_boots -1 -0'
 
 requirements:
-  craft_iron_block:
-    type: CRAFT
+  mine_stone:
+    type: MINE
     value: 5
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #1"
+    message:
+      - '&eYou have completed Requirement #1'
+      - '&ecomplete the other requirements to evolve.'
     item:
-      material: iron_block
+      material: stone
       data: 0
       ammount: 1

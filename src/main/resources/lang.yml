@@ -9,6 +9,7 @@ downgrade: "&cYou cannot downgrade your rank."
 evolve-error: "&cYou cannot evolve to this rank."
 requirement-error: "&cYou need to complete the requirements to evolve."
 
+
 sqlite-sucess: "&aSQLite connection completed."
 sqlite-error: "&cCould not start SQLite."
 table-created: "&aSQLite table created."
@@ -19,5 +20,8 @@ events_sucess: "&aAll events were successfully loaded."
 events_error: "&cEvents were not loaded."
 commands_sucess: "&aAll commands were successfully loaded."
 commands_error: "&cCommands were not loaded."
+wrong_rank: "<rank> &crank does not exist."
+command_forcerank: "&cUse /force rank <rank>"
+no-permission: "&cNo permission to use this."
 
 last_rank_var: "&clast rank"

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 
@@ -23,6 +24,7 @@ public class BannerCreator {
     public BannerCreator(DyeColor baseColor,List<Pattern> patternList){
         banner = new ItemStack(Objects.requireNonNull(Material.matchMaterial("425")),1);
         meta = (BannerMeta) banner.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         this.patterns = patternList;
         this.baseColor = baseColor;
         make();

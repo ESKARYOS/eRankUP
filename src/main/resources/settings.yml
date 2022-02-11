@@ -4,7 +4,6 @@ reset-sound: BAT_TAKEOFF
 #Sound that is played when unable to set a rank
 reset-sound-error: NOTE_BASS
 
-
 #Disable if using any chat plugin.
 chat: true
 #Server chat format

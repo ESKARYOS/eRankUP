@@ -34,7 +34,7 @@ public class Database {
     }
 
     public static void createTable(){
-        PreparedStatement stm = null;
+        PreparedStatement stm;
         try {
 
             stm = con.prepareStatement("CREATE TABLE IF NOT EXISTS `rankup` (`uuid` TEXT, `rank` TEXT)");
@@ -91,12 +91,13 @@ public class Database {
     }
 
     public static void createPlayer(UUID uuid){
-        PreparedStatement stm = null;
+        PreparedStatement stm;
         if(!playerExists(uuid)){
             try {
                 stm = con.prepareStatement("INSERT INTO rankup (uuid,rank) VALUES (?,?)");
                 if(Lang.first_join){
                     Player p = Bukkit.getPlayer(uuid);
+                    assert p != null;
                     for(String s : Lang.joinMessage){
                         p.sendMessage(RankHolder.hook(p,s));
                     }

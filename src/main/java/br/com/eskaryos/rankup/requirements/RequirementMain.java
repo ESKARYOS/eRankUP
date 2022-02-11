@@ -4,15 +4,17 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Profile;
 import br.com.eskaryos.rankup.ranks.Rank;
+import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -77,6 +79,7 @@ public class RequirementMain {
                 if(requirement.getValue()>=requirement.getMax())return;
                 if((requirement.getValue()+1)>requirement.getMax())return;
                 requirement.setValue(requirement.getValue()+1);
+                sendCompletedMessage(p,requirement);
                 e.getBlock().setMetadata("mine",new FixedMetadataValue(Main.plugin,true));
                 return;
             }
@@ -84,11 +87,37 @@ public class RequirementMain {
 
     }
 
+    /**
+     * Method to update Fish requirement
+     * @param p Player to update
+     * @param e Event to update
+     */
+    public static void setFishRequirement(Player p, PlayerFishEvent e){
+        Profile profile = DataMain.getProfile(p.getUniqueId());
+        if(e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
+            if (profile.getNext() == null) return;
+            if (e.getCaught() instanceof Item) {
+                ItemStack item = ((Item) e.getCaught()).getItemStack();
+                if (profile.getNext().getRequirements().get(RequirementType.FISH).isEmpty()) return;
+                for (Requirement requirement : profile.getNext().getRequirements().get(RequirementType.FISH)) {
+                    if (item.isSimilar(requirement.getItem())) {
+                        if (requirement.getValue() >= requirement.getMax()) return;
+                        if ((requirement.getValue() + 1) > requirement.getMax()) return;
+                        requirement.setValue(requirement.getValue() + 1);
+                        sendCompletedMessage(p,requirement);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     /***
      * Method to update Place requirement
      * @param p Player to update
      * @param e Event to update
      */
+
     public static void setPlaceRequirement(Player p, BlockPlaceEvent e) {
         Profile profile = DataMain.getProfile(p.getUniqueId());
         if(profile.getNext()==null)return;
@@ -104,6 +133,7 @@ public class RequirementMain {
                 if(requirement.getValue()>=requirement.getMax())return;
                 if((requirement.getValue()+1)>requirement.getMax())return;
                 requirement.setValue(requirement.getValue()+1);
+                sendCompletedMessage(p,requirement);
                 return;
             }
         }
@@ -122,30 +152,12 @@ public class RequirementMain {
                     if(requirement.getValue()>=requirement.getMax())return;
                     if((requirement.getValue()+1)>requirement.getMax())return;
                     requirement.setValue(requirement.getValue()+1);
+                    sendCompletedMessage(p,requirement);
                     return;
                 }
             }
         }
 
-    }
-
-    /***
-     * Method to update Requirement pickup
-     * @param p Player to update
-     * @param e Event to update
-     */
-    public static void setPickupRequirement(Player p, PlayerPickupItemEvent e) {
-        Profile profile = DataMain.getProfile(p.getUniqueId());
-        if(profile.getNext()==null)return;
-        if(profile.getNext().getRequirements().get(RequirementType.PICKUP).isEmpty())return;
-        for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.PICKUP)){
-            if(requirement.getItem().equals(e.getItem().getItemStack())){
-                if(requirement.getValue()>=requirement.getMax())return;
-                if((requirement.getValue()+1)>requirement.getMax())return;
-                requirement.setValue(requirement.getValue()+1);
-                return;
-            }
-        }
     }
 
     /**
@@ -160,6 +172,7 @@ public class RequirementMain {
         ItemStack craftedItem = e.getInventory().getResult();
         Inventory Inventory = e.getInventory();
         ClickType clickType = e.getClick();
+        assert craftedItem != null;
         int realAmount = craftedItem.getAmount();
         if(profile.getNext().getRequirements().get(RequirementType.CRAFT).isEmpty())return;
 
@@ -178,17 +191,30 @@ public class RequirementMain {
 
         final List<Requirement> requirements = rank.getRequirements().get(type);
         if(requirements.isEmpty())return;
-        setValueisTrue(requirements,e.getRecipe().getResult(),realAmount);
+        setValueisTrue(p,requirements,e.getRecipe().getResult(),realAmount);
     }
-    private static void setValueisTrue(List<Requirement> list,ItemStack item, int realAmount){
+    private static void setValueisTrue(Player p, List<Requirement> list, ItemStack item, int realAmount){
         for(Requirement requirement : list){
             if(requirement.getItem().isSimilar(item)){
                 if(requirement.getValue()>=requirement.getMax())return;
-                int var;
-                if((requirement.getValue()+realAmount)>requirement.getMax()){var = requirement.getMax();}else{
-                    var = requirement.getValue()+realAmount;
-                }
+                int var = Math.min((requirement.getValue() + realAmount), requirement.getMax());
                 requirement.setValue(var);
+                sendCompletedMessage(p,requirement);
+                return;
+            }
+        }
+    }
+    public static void sendCompletedMessage(Player p,Requirement requirement){
+        if(requirement.getValue()>=requirement.getMax()){
+            requirement.sendBar(p);
+            requirement.sendTitle(p);
+            requirement.sendSound(p);
+            if(!requirement.getCompletedMessage().isEmpty()){
+                for(String k : requirement.getCompletedMessage()){
+                    if(!k.isEmpty()){
+                        p.sendMessage(RankHolder.hook(p,k));
+                    }
+                }
             }
         }
     }

@@ -1,17 +1,11 @@
 package br.com.eskaryos.rankup.utils.placeholder;
 
 import br.com.eskaryos.rankup.Main;
-import br.com.eskaryos.rankup.data.DataMain;
-import br.com.eskaryos.rankup.data.Lang;
-import br.com.eskaryos.rankup.ranks.Rank;
-import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.requirements.RequirementMain;
 import br.com.eskaryos.rankup.requirements.RequirementType;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class PapiRequirements extends PlaceholderExpansion {
     @Override
@@ -29,7 +23,7 @@ public class PapiRequirements extends PlaceholderExpansion {
         return Main.plugin.getDescription().getVersion();
     }
 
-    public String onPlaceholderRequest(Player p, String s){
+    public String onPlaceholderRequest(Player p, @NotNull String s){
         if(p==null)return "0";
         if(s.contains("craft_")){
             String key = s.replace("craft_","");
@@ -41,14 +35,14 @@ public class PapiRequirements extends PlaceholderExpansion {
             RequirementType type = RequirementType.MINE;
             return RequirementMain.getRequirementValue(p,type,Integer.parseInt(key));
         }
+        if(s.contains("fish_")){
+            String key = s.replace("fish_","");
+            RequirementType type = RequirementType.FISH;
+            return RequirementMain.getRequirementValue(p,type,Integer.parseInt(key));
+        }
         if(s.contains("place_")){
             String key = s.replace("place_","");
             RequirementType type = RequirementType.PLACE;
-            return RequirementMain.getRequirementValue(p,type,Integer.parseInt(key));
-        }
-        if(s.contains("pickup_")){
-            String key = s.replace("pickup_","");
-            RequirementType type = RequirementType.PICKUP;
             return RequirementMain.getRequirementValue(p,type,Integer.parseInt(key));
         }
         if(s.contains("kill_")){

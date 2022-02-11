@@ -28,7 +28,7 @@ public class PapiRequirementsBar extends PlaceholderExpansion {
         return Main.plugin.getDescription().getVersion();
     }
 
-    public String onPlaceholderRequest(Player p, String s){
+    public String onPlaceholderRequest(Player p, @NotNull String s){
         if(p==null)return "0";
         if(s.contains("craft_")){
             String key = s.replace("craft_","");
@@ -52,9 +52,9 @@ public class PapiRequirementsBar extends PlaceholderExpansion {
                 return "§cERROR";
             }
         }
-        if(s.contains("place_")){
-            String key = s.replace("place_","");
-            RequirementType type = RequirementType.PLACE;
+        if(s.contains("fish_")){
+            String key = s.replace("fish_","");
+            RequirementType type = RequirementType.FISH;
             try{
                 int value = Integer.parseInt(RequirementMain.getRequirementValue(p,type,Integer.parseInt(key)));
                 int max = Integer.parseInt(RequirementMain.getRequirementMaxValue(p,type,Integer.parseInt(key)));
@@ -63,9 +63,9 @@ public class PapiRequirementsBar extends PlaceholderExpansion {
                 return "§cERROR";
             }
         }
-        if(s.contains("pickup_")){
-            String key = s.replace("pickup_","");
-            RequirementType type = RequirementType.PICKUP;
+        if(s.contains("place_")){
+            String key = s.replace("place_","");
+            RequirementType type = RequirementType.PLACE;
             try{
                 int value = Integer.parseInt(RequirementMain.getRequirementValue(p,type,Integer.parseInt(key)));
                 int max = Integer.parseInt(RequirementMain.getRequirementMaxValue(p,type,Integer.parseInt(key)));

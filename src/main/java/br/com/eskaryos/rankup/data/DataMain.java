@@ -7,7 +7,7 @@ import java.util.*;
 
 public class DataMain {
 
-    private static Map<UUID,Profile> profileList = new HashMap<>();
+    private static final Map<UUID,Profile> profileList = new HashMap<>();
 
     public static Profile getProfile(UUID uuid){
         return getProfileList().get(uuid);
@@ -27,6 +27,7 @@ public class DataMain {
     }
     public static void UnloadPlayerData(Player p){
         if(!profileList.containsKey(p.getUniqueId()))return;
+        if(profileList.get(p.getUniqueId()).getRank()==null)return;
         Database.setRank(p.getUniqueId(),profileList.get(p.getUniqueId()).getRank().getName());
         getProfileList().remove(p.getUniqueId());
     }

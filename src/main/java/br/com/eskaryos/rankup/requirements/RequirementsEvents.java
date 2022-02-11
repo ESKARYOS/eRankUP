@@ -1,15 +1,13 @@
 package br.com.eskaryos.rankup.requirements;
 
 import br.com.eskaryos.rankup.listener.Listeners;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerFishEvent;
 
 public class RequirementsEvents extends Listeners {
 
@@ -31,11 +29,12 @@ public class RequirementsEvents extends Listeners {
     }
 
     @EventHandler
-    public void Pickup(PlayerPickupItemEvent e){
-        RequirementMain.setPickupRequirement(e.getPlayer(),e);
-    }
-    @EventHandler
     public void Kill(EntityDeathEvent e){
         RequirementMain.setKillRequirement(e);
+    }
+
+    @EventHandler
+    public void event(PlayerFishEvent e){
+        RequirementMain.setFishRequirement(e.getPlayer(),e);
     }
 }

@@ -14,8 +14,6 @@ import org.bukkit.plugin.PluginManager;
 
 public class Listeners implements Listener {
 
-    static String log = "[" + Main.plugin.getName() + "]";
-
     public static void setupListener() {
         try {
             Main plugin = Main.plugin;
@@ -31,6 +29,7 @@ public class Listeners implements Listener {
             Logger.log(Logger.LogLevel.ERROR, Lang.events_error);
         }
     }
+
 
 }
 

@@ -20,10 +20,35 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JavaUtils {
+
+    public static void clearChat(Player p){
+        for(int i = 0;i<=100;i++) {
+            p.sendMessage("");
+        }
+    }
+
+    public static String getVersion() {
+        return Bukkit.getServer().getClass().getPackage().getName()
+                .replace('.', ',').split(",")[3];
+    }
+
+    public static boolean isAbove1_8() {
+        if (getVersion().contains("1_8"))
+            return true;
+        if (getVersion().contains("1_9"))
+            return true;
+        if (getVersion().contains("1_10"))
+            return true;
+        if (getVersion().contains("1_11"))
+            return true;
+        if (getVersion().contains("1_12"))
+            return true;
+        if (getVersion().contains("1_13"))
+            return true;
+        return false;
+    }
 
     public static void deleteFile(File file) {
         if (!file.exists()) {

@@ -2,14 +2,44 @@
 
 
 #Plugin variables
-  # <rank> Returns the player's rank
-  # <next> Returns the next rank or limit phrase defined in lang.yml
-  # <player> Returns the player's displayname
+# <rank> Returns the player's rank
+# <next> Returns the next rank or limit phrase defined in lang.yml
+# <player> Returns the player's displayname
 
 #Plugin Placeholder variables
 
- # %rankup_rank% Returns the player's rank
- # %rankup_next% Returns the next rank or limit phrase defined in lang.yml
+# %rankup_rank% Returns the player's rank
+# %rankup_next% Returns the next rank or limit phrase defined in lang.yml
+#
+# %bar_all% Return the rank total value
+# %value_[requirement]_[number]% Follow the example below
+# %bar_[requirement]_[number]%  Follow the example below
+
+
+#          requirements:
+#
+# The [mine_stone] requirement will be number 0
+# He is of the mine requirement type then will use %value_mine_0% or %bar_mine_0%
+#
+#             mine_stone:
+#               type: MINE
+#               value: 100
+#               item:
+#                 material: stone
+#                 data: 0
+#                 ammount: 1
+#
+# # The [fish] requirement will be number 1
+# He is of the mine requirement type then will use %value_fish_1% or %bar_fish_1%
+#
+#             fish:
+#               type: FISH
+#               value: 50
+#               item:
+#                 material: raw_fish
+#                 data: 0
+#                 ammount: 1
+#
 
 
 #Here are some sound values that can be used in settings.yml and other files

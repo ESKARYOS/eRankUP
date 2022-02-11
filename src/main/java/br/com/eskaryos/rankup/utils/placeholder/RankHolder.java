@@ -4,7 +4,7 @@ import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.requirements.RequirementType;
+import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,7 @@ public class RankHolder {
     public static String hook(Player p, String m){
         if(p==null)return "";
 
-        String message = m;
+        String message = ColorUtils.translateStringColor(m);
         if(m.contains("<player>")){
             message = message.replace("<player>",p.getDisplayName());
         }

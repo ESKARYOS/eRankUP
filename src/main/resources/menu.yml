@@ -13,9 +13,9 @@ Confirm-Menu:
       #Item display name
       display: "&aAccept"
       #Item material, can use numeric id
-      material: 159
+      material: head:4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4
       #Item date if it has
-      data: 5
+      data: 0
       #Item slot in inventory
       slot: 11
       #Number of items
@@ -25,8 +25,8 @@ Confirm-Menu:
         - '&7Click to accept evolve'
     deny:
       display: "&cDeny"
-      material: 159
-      data: 14
+      material: head:beb588b21a6f98ad1ff4e085c552dcb050efc9cab427f46048f18fc803475f7
+      data: 0
       slot: 15
       ammount: 1
       lore:
@@ -36,7 +36,7 @@ Confirm-Menu:
 Rank-Menu:
   #To create a new page use 'page-<number>'
   page-1:
-    name: "&7Rank menu"
+    name: "&7Rank Menu - 1"
     size: 54
     items:
       #To add a link just repeat the below and change the slot and rank
@@ -46,6 +46,14 @@ Rank-Menu:
       rank2:
         rank: stone
         slot: 11
+      next:
+        display: "&cNext page"
+        material: arrow
+        data: 0
+        slot: 50
+        ammount: 1
+        lore:
+          - '&7Click to go next page'
       close:
         display: "&cClose menu"
         material: barrier
@@ -54,3 +62,27 @@ Rank-Menu:
         ammount: 1
         lore:
           - '&7Click to close menu'
+  page-2:
+    name: "&7Rank Menu - 2"
+    size: 54
+    items:
+      #To add a link just repeat the below and change the slot and rank
+      rank1:
+        rank: default
+        slot: 10
+      close:
+        display: "&cClose menu"
+        material: barrier
+        data: 0
+        slot: 49
+        ammount: 1
+        lore:
+          - '&7Click to close menu'
+      back:
+        display: "&cPrevious page"
+        material: arrow
+        data: 0
+        slot: 48
+        ammount: 1
+        lore:
+          - '&7Click to go back'

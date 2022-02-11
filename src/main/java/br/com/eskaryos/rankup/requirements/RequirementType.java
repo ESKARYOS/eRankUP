@@ -4,8 +4,8 @@ public enum RequirementType {
 
     MINE,
     PLACE,
-    PICKUP,
     CRAFT,
-    KILL;
+    FISH,
+    KILL
 
 }
