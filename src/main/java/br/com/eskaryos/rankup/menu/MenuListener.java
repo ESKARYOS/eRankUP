@@ -4,10 +4,10 @@ import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.listener.Listeners;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,7 +29,7 @@ public class MenuListener extends Listeners {
         if(hasConfirmMenu(e)){return;}
         if(hasRankMenu(e)){return;}
         if(menuTitles.contains(title)){
-            JavaUtils.playSound(p, SoundsAPI.CLICK,1F,1F);
+            JavaUtils.playSound(p, Utils.getSound("CLICK"),1F,1F);
             e.setCancelled(true);
             Menu menu = getMenu(e.getView().getTitle());
             if(menu==null)return;
@@ -63,7 +63,7 @@ public class MenuListener extends Listeners {
         assert item != null;
         if(hasRankMenu(e.getView().getTitle())!=null){
             e.setCancelled(true);
-            JavaUtils.playSound(p, SoundsAPI.CLICK,1F,1F);
+            JavaUtils.playSound(p, Utils.getSound("CLICK"),1F,1F);
             Rank rank = hasRankMenu(e.getView().getTitle());
             Menu menu = rank.getMenu();
             if(menu.getItems().containsKey("evolve") && hasSimilar(p,item,getItem(p,menu.getItems().get("evolve")))){
@@ -98,7 +98,7 @@ public class MenuListener extends Listeners {
             }
             if(hasSimilar(p,item,RankMenu.menus.get("ConfirmMenu").clone(p,"deny"))){
                 p.closeInventory();
-                JavaUtils.playSound(p, SoundsAPI.CLICK,1F,1F);
+                JavaUtils.playSound(p, Utils.getSound("CLICK"),1F,1F);
                 return true;
             }
             return true;
@@ -151,7 +151,7 @@ public class MenuListener extends Listeners {
     }
     public boolean hasSimilar(Player p,ItemStack item,ItemStack item2){
         if(item.getType()!=item2.getType())return false;
-        String display = RankHolder.hook(p,ColorUtils.translateStringColor(Objects.requireNonNull(item2.getItemMeta()).getDisplayName()));
+        String display = RankHolder.hook(p, Utils.color(Objects.requireNonNull(item2.getItemMeta()).getDisplayName()));
         return Objects.requireNonNull(item.getItemMeta()).getDisplayName().equals(display);
     }
 

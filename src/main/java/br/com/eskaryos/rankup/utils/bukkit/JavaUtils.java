@@ -5,10 +5,10 @@ import br.com.eskaryos.rankup.utils.api.EnchantAPI;
 import br.com.eskaryos.rankup.utils.api.SkullCreator;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import com.google.common.io.Files;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -230,15 +230,15 @@ public class JavaUtils {
         return i >= ammount;
     }
 
-    public static void playSound(Player p, SoundsAPI sound, float f1, float f2) {
-        p.playSound(p.getLocation(), sound.bukkitSound(), f1, f2);
+    public static void playSound(Player p, Sound sound, float f1, float f2) {
+        p.playSound(p.getLocation(), sound, f1, f2);
     }
     public static void sendAllMessage(String message){
         for(Player p : Bukkit.getOnlinePlayers()){p.sendMessage(message);}
     }
-    public static void sendAllSound(SoundsAPI s, float f1,float f2){
+    public static void sendAllSound(Sound sound, float f1,float f2){
         for(Player p : Bukkit.getOnlinePlayers()){
-            p.playSound(p.getLocation(),s.bukkitSound(),f1,f2);
+            p.playSound(p.getLocation(),sound,f1,f2);
         }
     }
 

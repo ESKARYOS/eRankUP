@@ -44,8 +44,23 @@ Rank-Menu:
         rank: default
         slot: 10
       rank2:
-        rank: stone
+        rank: fish1
         slot: 11
+      rank3:
+        rank: fish2
+        slot: 12
+      rank4:
+        rank: fish3
+        slot: 13
+      rank5:
+        rank: cow1
+        slot: 14
+      rank6:
+        rank: cow2
+        slot: 15
+      rank7:
+        rank: cow3
+        slot: 16
       next:
         display: "&cNext page"
         material: arrow
@@ -67,9 +82,6 @@ Rank-Menu:
     size: 54
     items:
       #To add a link just repeat the below and change the slot and rank
-      rank1:
-        rank: default
-        slot: 10
       close:
         display: "&cClose menu"
         material: barrier

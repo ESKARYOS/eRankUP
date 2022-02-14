@@ -4,7 +4,7 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -25,20 +25,22 @@ public class Database {
         try {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection(url);
-            createTable();
+            createTable("rankup","rank");
+            createTable("mine","mine");
+            createTable("place","place");
+            createTable("craft","craft");
+            createTable("fish","fish");
+            createTable("kill","kill");
             Logger.log(Logger.LogLevel.INFO,Lang.SQLiteSuccess);
         } catch (Exception e) {
             Logger.log(Logger.LogLevel.ERROR,Lang.SQLiteError);
             Main.plugin.getPluginLoader().disablePlugin(Main.plugin);
         }
     }
-
-    public static void createTable(){
+    public static void createTable(String table,String value){
         PreparedStatement stm;
         try {
-
-            stm = con.prepareStatement("CREATE TABLE IF NOT EXISTS `rankup` (`uuid` TEXT, `rank` TEXT)");
-            Logger.log(Logger.LogLevel.INFO,Lang.TableCreated);
+            stm = con.prepareStatement("CREATE TABLE IF NOT EXISTS `"+table+"` (`uuid` TEXT, `"+value+"` TEXT)");
             stm.execute();
             stm.close();
         } catch (SQLException e) {
@@ -59,12 +61,29 @@ public class Database {
         }
     }
 
+    public static String deserializeRequirement(UUID uuid,String key){
+        try {
+            PreparedStatement statement = con
+                    .prepareStatement("SELECT * FROM "+key+" WHERE UUID=?");
+            statement.setString(1, uuid.toString());
+            ResultSet results = statement.executeQuery();
+            results.next();
+            String requirement = results.getString(key);
+            results.close();
+            statement.close();
+            return requirement;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void loadPlayer(UUID uuid){
-        createPlayer(uuid);
+        createPlayer(uuid,"rankup","rank");
         try {
             Rank rank = RankMain.clone(RankMain.getRankByName(getRank(uuid)));
             DataMain.getProfileList().put(uuid,new Profile(uuid,rank));
-            if(RankMain.getRankById(rank.getOrder()+1)!=null){
+            if(!RankMain.isLastRank(Objects.requireNonNull(Bukkit.getPlayer(uuid)))){
                 DataMain.getProfile(uuid).setNext(RankMain.clone(Objects.requireNonNull(RankMain.getRankById(rank.getOrder() + 1))));
             }
         } catch (Exception e) {
@@ -90,11 +109,11 @@ public class Database {
         return null;
     }
 
-    public static void createPlayer(UUID uuid){
+    public static void createPlayer(UUID uuid,String table,String key){
         PreparedStatement stm;
         if(!playerExists(uuid)){
             try {
-                stm = con.prepareStatement("INSERT INTO rankup (uuid,rank) VALUES (?,?)");
+                stm = con.prepareStatement("INSERT INTO "+table+" (uuid,"+key+") VALUES (?,?)");
                 if(Lang.first_join){
                     Player p = Bukkit.getPlayer(uuid);
                     assert p != null;
@@ -103,7 +122,7 @@ public class Database {
                     }
                 }
                 stm.setString(1,uuid.toString());
-                stm.setString(2, RankMain.getDefaultRank().getName());
+                stm.setString(2, "0");
                 stm.executeUpdate();
                 stm.close();
 

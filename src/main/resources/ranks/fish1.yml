@@ -1,10 +1,10 @@
 #Rank name, do not use cores or symbols, this name will be used as the rank identifier.
-name: default
+name: fish1
 #This is the display name of the rank, here you can use colors and symbols.
-display: "&e[Default] "
+display: "&7[Fish I] "
 #This is the rank order, set 0 for the starting rank, the higher the rank the more advanced the rank,
 #if there is any rank with the same rank it will not be loaded.
-order: 0
+order: 1
 
 #=======================================================================================================================
 #To find out which sounds to use, open the help.yml file
@@ -38,9 +38,9 @@ menu:
   size: 54
   items:
     rank:
-      display: "&a[Default Rank]"
+      display: "&a[Fish I Rank]"
       slot: 13
-      material: grass
+      material: head:c2ad3cc6d3631caa887a91ebc5e6a65cf257803c7c7acd57d19a0ac22fae8403
       data: 0
       ammount: 1
       lore:
@@ -57,17 +57,31 @@ menu:
     requirement_1:
       display: "&aRequirement - #1"
       slot: 20
-      material: iron_pickaxe
+      material: sand
       data: 0
       ammount: 1
       lore:
         - '&7To complete this requirement'
         - '&7you need to mine the following block.'
         - ''
-        - '&7Mine: &6100x - Stone'
+        - '&7Mine: &62.000x - Sands'
         - ''
         - '&7Mined: &e%value_mine_0%'
         - '&7Progress: %bar_mine_0%'
+    requirement-2:
+      display: "&aRequirement - #2"
+      slot: 21
+      material: tropical_fish
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to fish the following.'
+        - ''
+        - '&7Fish caught: &e1.500x - Fish'
+        - ''
+        - '&7Items crafted: &e%value_fish_0%'
+        - '&7Progress: %bar_fish_0%'
     evolve:
       display: "&aClick to evolve"
       slot: 31
@@ -95,13 +109,13 @@ menu:
         - '&7Click to go back to main page'
 #Rank icon
 icon:
-  display: "&e[Default]"
-  material: grass_block
+  display: "&7[Fish I]"
+  material: head:c2ad3cc6d3631caa887a91ebc5e6a65cf257803c7c7acd57d19a0ac22fae8403
   data: 0
   ammount: 1
   lore:
-    - '&7This is the default rank'
-    - '&7they all start with s rank.'
+    - '&7This is the stone rank'
+    - '&7evolve for him.'
     - ''
     - '&7Status: &cIncomplete'
     - '&7Progress: %bar_all%'
@@ -109,14 +123,11 @@ icon:
     - '&eClick to open menu'
 #Rank icon completed
 icon-completed:
-  display: "&a[Default]"
+  display: "&7[Fish I]"
   material: head:4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4
   data: 0
   ammount: 1
   lore:
-    - '&7This is the default rank'
-    - '&7they all start with s rank.'
-    - ''
     - '&7Status: &aCompleted'
 
 #Commands that will be executed when evolving in rank.
@@ -133,9 +144,9 @@ commands:
   - 'give: -diamond_boots -1 -0'
 
 requirements:
-  mine_stone:
+  mine_sand:
     type: MINE
-    value: 5
+    value: 1000
     sound: LEVEL_UP
     title: "&aCompleted:&fcompleted requirement"
     actionbar: "&aCongratulations you have completed &eRequirement #1"
@@ -143,6 +154,19 @@ requirements:
       - '&eYou have completed Requirement #1'
       - '&ecomplete the other requirements to evolve.'
     item:
-      material: stone
+      material: hay_block
+      data: 0
+      ammount: 1
+  fish_fish:
+    type: FISH
+    value: 1500
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #2"
+    message:
+      - '&eYou have completed Requirement #2'
+      - '&ecomplete the other requirements to evolve.'
+    item:
+      material: tropical_fish
       data: 0
       ammount: 1

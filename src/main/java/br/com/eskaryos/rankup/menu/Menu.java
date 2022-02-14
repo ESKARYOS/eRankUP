@@ -3,8 +3,8 @@ package br.com.eskaryos.rankup.menu;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 @Getter@Setter
-public class Menu {
+public class Menu extends Utils {
 
     private Map<String, ItemStack> items = new HashMap<>();
 
@@ -33,19 +33,39 @@ public class Menu {
         this.page = page;
     }
 
-    public Inventory getMenu(Player p){
+    public Inventory getMenu(Player p,boolean hasRankMenu){
         Inventory inv = Bukkit.createInventory(p,getSlots(),getTitle());
         Map<String,ItemStack> list = fixItems(p);
 
-        for(String key: getItemSlot().keySet()){inv.setItem(getItemSlot().get(key),list.get(key));}
+        for(String key: getItemSlot().keySet()){
+            if(hasRankMenu){
+                inv.setItem(getItemSlot().get(key),list.get(key));
+            }else{
+                ItemStack item = list.get(key);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(new ArrayList<>());
+                item.setItemMeta(meta);
+                inv.setItem(getItemSlot().get(key),list.get(key));
+            }
+        }
         int order = DataMain.getProfile(p.getUniqueId()).getRank().getOrder();
         for(String name : getRanks()){
             Rank rank = RankMain.getRankByName(name.split(":")[0]);
             int slot = Integer.parseInt(name.split(":")[1]);
             if(order>=rank.getOrder()){
-                inv.setItem(slot,clone(p,rank.getRankIconCompleted()));
+                ItemStack clone = clone(p,rank.getRankIconCompleted());
+                glow(clone);
+                inv.setItem(slot,clone(p,clone));
             }else{
-                inv.setItem(slot,clone(p,rank.getRankIcon()));
+                if(rank.getOrder()==DataMain.getProfile(p.getUniqueId()).getNext().getOrder()){
+                    inv.setItem(slot,clone(p,rank.getRankIcon()));
+                }else{
+                    ItemStack item = clone(p,rank.getRankIcon());
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setLore(new ArrayList<>());
+                    item.setItemMeta(meta);
+                    inv.setItem(slot,item);
+                }
             }
         }
 
@@ -68,11 +88,11 @@ public class Menu {
             ItemMeta meta = nItem.getItemMeta();
             assert meta != null;
             if(Objects.requireNonNull(item.getItemMeta()).hasDisplayName()){
-                meta.setDisplayName(RankHolder.hook(p, ColorUtils.translateStringColor(item.getItemMeta().getDisplayName())));
+                meta.setDisplayName(RankHolder.hook(p, color(item.getItemMeta().getDisplayName())));
             }
             if(item.getItemMeta().hasLore()){
                 List<String> lore = new ArrayList<>();
-                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){lore.add(RankHolder.hook(p,ColorUtils.translateStringColor(s)));}
+                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){lore.add(RankHolder.hook(p,s));}
                 meta.setLore(lore);
             }
 
@@ -87,11 +107,13 @@ public class Menu {
             ItemMeta meta = nItem.getItemMeta();
             assert meta != null;
             if(Objects.requireNonNull(item.getItemMeta()).hasDisplayName()){
-                meta.setDisplayName(RankHolder.hook(p,ColorUtils.translateStringColor(item.getItemMeta().getDisplayName())));
+                meta.setDisplayName(RankHolder.hook(p,color(item.getItemMeta().getDisplayName())));
             }
             if(item.getItemMeta().hasLore()){
                 List<String> lore = new ArrayList<>();
-                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){lore.add(RankHolder.hook(p,ColorUtils.translateStringColor(s)));}
+                for(String s : Objects.requireNonNull(item.getItemMeta().getLore())){
+                    lore.add(RankHolder.hook(p,s));
+                }
                 meta.setLore(lore);
             }
 

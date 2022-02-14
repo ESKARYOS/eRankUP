@@ -9,12 +9,13 @@ import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.requirements.Requirement;
 import br.com.eskaryos.rankup.requirements.RequirementType;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.*;
 
-public class RankMain {
+public class RankMain extends Utils {
 
     private static final Map<String,Rank> rankMap = new HashMap<>();
 
@@ -138,36 +139,46 @@ public class RankMain {
         File path = new File(Main.plugin.getDataFolder() + "/ranks");
         if(!path.exists()){
             Main.plugin.saveResource("ranks/default.yml",true);
-            Main.plugin.saveResource("ranks/stone.yml",true);
+            Main.plugin.saveResource("ranks/fish1.yml",true);
+            Main.plugin.saveResource("ranks/fish2.yml",true);
+            Main.plugin.saveResource("ranks/fish3.yml",true);
+            Main.plugin.saveResource("ranks/cow1.yml",true);
+            Main.plugin.saveResource("ranks/cow2.yml",true);
+            Main.plugin.saveResource("ranks/cow3.yml",true);
         }
         File[] list = path.listFiles();
         assert list != null;
         if(list.length<=0){
             Main.plugin.saveResource("ranks/default.yml",true);
-            Main.plugin.saveResource("ranks/stone.yml",true);
+            Main.plugin.saveResource("ranks/fish1.yml",true);
+            Main.plugin.saveResource("ranks/fish2.yml",true);
+            Main.plugin.saveResource("ranks/fish3.yml",true);
+            Main.plugin.saveResource("ranks/cow1.yml",true);
+            Main.plugin.saveResource("ranks/cow2.yml",true);
+            Main.plugin.saveResource("ranks/cow3.yml",true);
         }
         for(File file : list){
             if(file.getName().endsWith(".yml")){
                 try{
                     YamlConfiguration config = JavaUtils.loadConfigUTF8(file);
-                    String display = ColorUtils.translateStringColor(config.getString("display"));
-                    String name = ColorUtils.translateStringColor(config.getString("name"));
+                    String display = color(config.getString("display"));
+                    String name = color(config.getString("name"));
                     int order = config.getInt("order");
 
                     Rank rank = new Rank(name,display,order);
                     ItemStack icon = ItemUtils.getItem(config,"icon");
                     ItemStack iconCompleted = ItemUtils.getItem(config,"icon-completed");
 
-                    SoundsAPI evolve = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound")));
-                    SoundsAPI evolveAll = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound-global")));
-                    SoundsAPI evolveError = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("evolve-sound-error")));
+                    Sound evolve = getSound(config.getString("evolve-sound"));
+                    Sound evolveAll =getSound(config.getString("evolve-sound-global"));
+                    Sound evolveError = getSound(config.getString("evolve-sound-error"));
 
-                    List<String> evolveMessage = ColorUtils.translateStringColor(config.getStringList("evolve-message"));
-                    List<String> evolveMessageAll = ColorUtils.translateStringColor(config.getStringList("evolve-message-global"));
-                    rank.setEvolveActionbar(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("action-bar"))));
-                    rank.setEvolveActionbarAll(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("action-bar-all"))));
-                    rank.setEvolveTitle(ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("title"))));
-                    rank.setEvolveSubTitle(ColorUtils.translateStringColor( Objects.requireNonNull(config.getString("subtitle"))));
+                    List<String> evolveMessage = color(config.getStringList("evolve-message"));
+                    List<String> evolveMessageAll = color(config.getStringList("evolve-message-global"));
+                    rank.setEvolveActionbar(color(config.getString("action-bar")));
+                    rank.setEvolveActionbarAll(color(config.getString("action-bar-all")));
+                    rank.setEvolveTitle(color(config.getString("title")));
+                    rank.setEvolveSubTitle(color(config.getString("subtitle")));
 
                     rank.setRankIcon(icon);
                     rank.setRankIconCompleted(iconCompleted);
@@ -186,11 +197,11 @@ public class RankMain {
                         menu.getItemSlot().put(key,config.getInt("menu.items."+key+".slot"));
                     }
                     for(String key : Objects.requireNonNull(config.getConfigurationSection("requirements")).getKeys(false)){
-                        RequirementType type = RequirementType.valueOf(config.getString("requirements."+key+".type"));
-                        List<String> completedMessage = ColorUtils.translateStringColor(config.getStringList("requirements."+key+".message"));
+                        RequirementType type = RequirementType.valueOf(config.getString("requirements."+key+".type").toUpperCase(Locale.ROOT));
+                        List<String> completedMessage = color(config.getStringList("requirements."+key+".message"));
                         SoundsAPI sound = SoundsAPI.valueOf(config.getString("requirements."+key+".sound"));
-                        String title = ColorUtils.translateStringColor(config.getString("requirements."+key+".title"));
-                        String bar = ColorUtils.translateStringColor(config.getString("requirements."+key+".actionbar"));
+                        String title = color(config.getString("requirements."+key+".title"));
+                        String bar = color(config.getString("requirements."+key+".actionbar"));
 
                         if(type != RequirementType.KILL){
                            ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
@@ -214,7 +225,7 @@ public class RankMain {
                         getRankMap().put(name,rank);
                     }
                 }catch (Exception e){
-                    e.printStackTrace();
+                   Logger.log(Logger.LogLevel.ERROR,e.getMessage());
                 }
             }
         }

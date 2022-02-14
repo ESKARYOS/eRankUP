@@ -2,8 +2,9 @@ name: eRankUP
 version: 1.0
 main: br.com.eskaryos.rankup.Main
 authors: [ ESKARYOS ]
+api-version: 1.13
 softdepend:
   - PlaceHolderAPI
 commands:
-  rank:
-    aliases: [evolve,rankup,rk]
+  rankup:
+    aliases: [evolve,rank,rk]

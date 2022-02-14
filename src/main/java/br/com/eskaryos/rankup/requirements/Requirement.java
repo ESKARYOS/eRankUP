@@ -1,9 +1,8 @@
 package br.com.eskaryos.rankup.requirements;
 
-import br.com.eskaryos.rankup.utils.api.ActionBar;
+import br.com.eskaryos.rankup.utils.nms.ActionBar;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
-import br.com.eskaryos.rankup.utils.api.Title;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -44,7 +43,7 @@ public class Requirement {
         if(titleCompleted.isEmpty())return;
         String title = titleCompleted.split(":")[0];
         String sub = titleCompleted.split(":")[1];
-        Title.sendTitle(p,RankHolder.hook(p,title),RankHolder.hook(p,sub),0,20*4,0);
+        ActionBar.sendTitle(p,RankHolder.hook(p,title),RankHolder.hook(p,sub),0,20*4,0);
     }
     public void sendSound(Player p){
         if(soundCompleted ==null)return;

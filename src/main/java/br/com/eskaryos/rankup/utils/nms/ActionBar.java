@@ -1,8 +1,7 @@
-package br.com.eskaryos.rankup.utils.api;
+package br.com.eskaryos.rankup.utils.nms;
 
 import java.lang.reflect.Constructor;
 
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;

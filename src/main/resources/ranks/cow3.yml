@@ -1,10 +1,10 @@
 #Rank name, do not use cores or symbols, this name will be used as the rank identifier.
-name: stone
+name: cow3
 #This is the display name of the rank, here you can use colors and symbols.
-display: "&a[Stone] "
+display: "&7[Cow III] "
 #This is the rank order, set 0 for the starting rank, the higher the rank the more advanced the rank,
 #if there is any rank with the same rank it will not be loaded.
-order: 1
+order: 6
 
 #=======================================================================================================================
 #To find out which sounds to use, open the help.yml file
@@ -38,9 +38,9 @@ menu:
   size: 54
   items:
     rank:
-      display: "&a[Stone Rank]"
+      display: "&7[Cow III Rank]"
       slot: 13
-      material: stone
+      material: head:be8456155142cbe4e61353ffbaff304d3d9c4bc9247fc27b92e33e6e26067edd
       data: 0
       ammount: 1
       lore:
@@ -57,31 +57,59 @@ menu:
     requirement_1:
       display: "&aRequirement - #1"
       slot: 20
-      material: iron_pickaxe
+      material: hay_block
       data: 0
       ammount: 1
       lore:
         - '&7To complete this requirement'
         - '&7you need to mine the following block.'
         - ''
-        - '&7Mine: &6100x - Stone'
+        - '&7Mine: &61.000x - Hay block'
         - ''
         - '&7Mined: &e%value_mine_0%'
         - '&7Progress: %bar_mine_0%'
     requirement-2:
       display: "&aRequirement - #2"
       slot: 21
-      material: head:64528b3229660f3dfab42414f59ee8fd01e80081dd3df30869536ba9b414e089
+      material: wheat
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to craft the following.'
+        - ''
+        - '&7Craft: &e600x - Wheat'
+        - ''
+        - '&7Items crafted: &e%value_craft_0%'
+        - '&7Progress: %bar_craft_0%'
+    requirement-3:
+      display: "&aRequirement - #3"
+      slot: 22
+      material: bread
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to craft the following.'
+        - ''
+        - '&7Craft: &e1.500x - Bread'
+        - ''
+        - '&7Items crafted: &e%value_craft_1%'
+        - '&7Progress: %bar_craft_1%'
+    requirement-4:
+      display: "&aRequirement - #4"
+      slot: 23
+      material: diamond_sword
       data: 0
       ammount: 1
       lore:
         - '&7To complete this requirement'
         - '&7you need to kill the following.'
         - ''
-        - '&7Kill: &c50x - Zombie'
+        - '&7Kill: &c1.500x - Cows'
         - ''
-        - '&7Dead zombies: &e%value_fish_0%'
-        - '&7Progress: %bar_fish_0%'
+        - '&7Cows dead: &e%value_kill_0%'
+        - '&7Progress: %bar_kill_0%'
     evolve:
       display: "&aClick to evolve"
       slot: 31
@@ -109,8 +137,8 @@ menu:
         - '&7Click to go back to main page'
 #Rank icon
 icon:
-  display: "&c[Stone]"
-  material: stone
+  display: "&7[Cow III]"
+  material: head:be8456155142cbe4e61353ffbaff304d3d9c4bc9247fc27b92e33e6e26067edd
   data: 0
   ammount: 1
   lore:
@@ -123,7 +151,7 @@ icon:
     - '&eClick to open menu'
 #Rank icon completed
 icon-completed:
-  display: "&a[Stone]"
+  display: "&7[Cow III]"
   material: head:4312ca4632def5ffaf2eb0d9d7cc7b55a50c4e3920d90372aab140781f5dfbc4
   data: 0
   ammount: 1
@@ -144,9 +172,9 @@ commands:
   - 'give: -diamond_boots -1 -0'
 
 requirements:
-  mine_stone:
+  mine_hay:
     type: MINE
-    value: 5
+    value: 1000
     sound: LEVEL_UP
     title: "&aCompleted:&fcompleted requirement"
     actionbar: "&aCongratulations you have completed &eRequirement #1"
@@ -154,12 +182,12 @@ requirements:
       - '&eYou have completed Requirement #1'
       - '&ecomplete the other requirements to evolve.'
     item:
-      material: stone
+      material: hay_block
       data: 0
       ammount: 1
-  fish:
-    type: FISH
-    value: 1
+  craft_wheat:
+    type: CRAFT
+    value: 600
     sound: LEVEL_UP
     title: "&aCompleted:&fcompleted requirement"
     actionbar: "&aCongratulations you have completed &eRequirement #2"
@@ -167,6 +195,29 @@ requirements:
       - '&eYou have completed Requirement #2'
       - '&ecomplete the other requirements to evolve.'
     item:
-      material: raw_fish
+      material: wheat
       data: 0
       ammount: 1
+  craft_bread:
+    type: CRAFT
+    value: 1500
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #2"
+    message:
+      - '&eYou have completed Requirement #2'
+      - '&ecomplete the other requirements to evolve.'
+    item:
+      material: bread
+      data: 0
+      ammount: 1
+  kill_cow:
+    type: KILL
+    value: 1500
+    entity: cow
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #2"
+    message:
+      - '&eYou have completed Requirement #2'
+      - '&ecomplete the other requirements to evolve.'

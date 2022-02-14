@@ -7,9 +7,9 @@ import br.com.eskaryos.rankup.listener.Listeners;
 import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
-import br.com.eskaryos.rankup.utils.placeholder.Papi;
-import br.com.eskaryos.rankup.utils.placeholder.PapiRequirements;
-import br.com.eskaryos.rankup.utils.placeholder.PapiRequirementsBar;
+import br.com.eskaryos.rankup.utils.api.placeholder.Papi;
+import br.com.eskaryos.rankup.utils.api.placeholder.PapiRequirements;
+import br.com.eskaryos.rankup.utils.api.placeholder.PapiRequirementsBar;
 import br.com.eskaryos.rankup.utils.api.UpdateChecker;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -42,8 +42,8 @@ public final class Main extends JavaPlugin {
                 System.gc();
             }catch (Exception e){}
         }
-    }
 
+    }
     @Override
     public void onDisable() {
         DataMain.UnloadData();

@@ -1,4 +1,4 @@
-package br.com.eskaryos.rankup.utils.placeholder;
+package br.com.eskaryos.rankup.utils.api.placeholder;
 
 import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;

@@ -7,7 +7,7 @@ import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

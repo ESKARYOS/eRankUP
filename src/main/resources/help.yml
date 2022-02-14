@@ -15,12 +15,12 @@
 # %value_[requirement]_[number]% Follow the example below
 # %bar_[requirement]_[number]%  Follow the example below
 
+#Requirements
+# MINE,CRAFT,PLACE,FISH,KILL
 
 #          requirements:
-#
 # The [mine_stone] requirement will be number 0
 # He is of the mine requirement type then will use %value_mine_0% or %bar_mine_0%
-#
 #             mine_stone:
 #               type: MINE
 #               value: 100

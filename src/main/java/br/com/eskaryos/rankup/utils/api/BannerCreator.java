@@ -1,5 +1,6 @@
 package br.com.eskaryos.rankup.utils.api;
 
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.DyeColor;
@@ -22,11 +23,12 @@ public class BannerCreator {
     private List<Pattern> patterns;
 
     public BannerCreator(DyeColor baseColor,List<Pattern> patternList){
-        banner = new ItemStack(Objects.requireNonNull(Material.matchMaterial("425")),1);
+        this.baseColor = baseColor;
+        banner = getBannerItemStack();
         meta = (BannerMeta) banner.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         this.patterns = patternList;
-        this.baseColor = baseColor;
+
         make();
     }
 
@@ -39,5 +41,13 @@ public class BannerCreator {
 
     public ItemStack getBanner(){
         return banner.clone();
+    }
+
+    public ItemStack getBannerItemStack(){
+        if(JavaUtils.getVersion().contains("1_18")){
+            Material material = Material.valueOf(baseColor.name()+"_BANNER");
+            return new ItemStack(material);
+        }
+        return new ItemStack(Objects.requireNonNull(Material.matchMaterial("425")),1);
     }
 }

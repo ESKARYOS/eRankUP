@@ -4,10 +4,11 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.utils.api.BannerCreator;
 import br.com.eskaryos.rankup.utils.api.PatternTypes;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
+import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.DyeColor;
+import org.bukkit.Sound;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.*;
 
-public class Lang {
+public class Lang extends Utils {
 
     public static String last_rank = "§cYou have already reached the last rank!";
     public static String evolvedMsg = "§aYou evolved to rank <rank>";
@@ -61,8 +62,8 @@ public class Lang {
     public static String color1 = "&a";
     public static String color2 = "&7";
 
-    public static SoundsAPI reset_sound = SoundsAPI.BAT_TAKEOFF;
-    public static SoundsAPI reset_sound_error = SoundsAPI.NOTE_BASS;
+    public static Sound reset_sound = getSound("BAT_TAKEOFF");
+    public static Sound reset_sound_error = getSound("NOTE_BASS");
 
     public static Map<String, BannerCreator> banners = new HashMap<>();
 
@@ -102,31 +103,31 @@ public class Lang {
             Main.plugin.saveResource("lang.yml",true);
         }
         FileConfiguration config = JavaUtils.loadConfigUTF8(file);
-        last_rank = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("last_rank")));
-        lastRankVariable = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("last_rank_var")));
-        evolvedMsg = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("evolved-msg")));
-        evolvedGlobal = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("evolved-global")));
-        invalidMenu = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("invalid-menu")));
-        cantJump = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("cant-jump")));
-        downgrade = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("downgrade")));
-        evolveError = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("evolve-error")));
-        requirementError = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("requirement-error")));
+        last_rank = color(Objects.requireNonNull(config.getString("last_rank")));
+        lastRankVariable = color(Objects.requireNonNull(config.getString("last_rank_var")));
+        evolvedMsg = color(Objects.requireNonNull(config.getString("evolved-msg")));
+        evolvedGlobal = color(Objects.requireNonNull(config.getString("evolved-global")));
+        invalidMenu = color(Objects.requireNonNull(config.getString("invalid-menu")));
+        cantJump = color(Objects.requireNonNull(config.getString("cant-jump")));
+        downgrade = color(Objects.requireNonNull(config.getString("downgrade")));
+        evolveError = color(Objects.requireNonNull(config.getString("evolve-error")));
+        requirementError = color(Objects.requireNonNull(config.getString("requirement-error")));
 
-        SQLiteSuccess = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("sqlite-sucess")));
-        SQLiteError = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("sqlite-error")));
-        TableCreated = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("table-created")));
-        TableNoCreated = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("table-error")));
-        PlayerNoLoaded = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("player-noloaded")));
-        events_sucess = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("events_sucess")));
-        events_error = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("events_error")));
-        commands_sucess = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("commands_sucess")));
-        commands_error = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("commands_error")));
-        wrong_rank = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("wrong_rank")));
-        no_permission = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("no-permission")));
-        command_forcerank = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("command_forcerank")));
+        SQLiteSuccess = color(Objects.requireNonNull(config.getString("sqlite-sucess")));
+        SQLiteError = color(Objects.requireNonNull(config.getString("sqlite-error")));
+        TableCreated = color(Objects.requireNonNull(config.getString("table-created")));
+        TableNoCreated = color(Objects.requireNonNull(config.getString("table-error")));
+        PlayerNoLoaded = color(Objects.requireNonNull(config.getString("player-noloaded")));
+        events_sucess = color(Objects.requireNonNull(config.getString("events_sucess")));
+        events_error = color(Objects.requireNonNull(config.getString("events_error")));
+        commands_sucess = color(Objects.requireNonNull(config.getString("commands_sucess")));
+        commands_error = color(Objects.requireNonNull(config.getString("commands_error")));
+        wrong_rank = color(Objects.requireNonNull(config.getString("wrong_rank")));
+        no_permission = color(Objects.requireNonNull(config.getString("no-permission")));
+        command_forcerank = color(Objects.requireNonNull(config.getString("command_forcerank")));
 
-        rankredefine = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("rank-reset")).replace("&","§"));
-        rankredefineerror = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("rank-reset-error")).replace("&","§"));
+        rankredefine = color(Objects.requireNonNull(config.getString("rank-reset")).replace("&","§"));
+        rankredefineerror = color(Objects.requireNonNull(config.getString("rank-reset-error")).replace("&","§"));
 
     }
     public static void LoadSettings() {
@@ -134,20 +135,20 @@ public class Lang {
         if(!file.exists()){Main.plugin.saveResource("settings.yml",true);}
         YamlConfiguration config = JavaUtils.loadConfigUTF8(file);
 
-        reset_sound = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("reset-sound")));
-        reset_sound_error = Objects.requireNonNull(SoundsAPI.valueOf(config.getString("reset-sound-error")));
+        reset_sound = getSound(Objects.requireNonNull(config.getString("reset-sound")).toUpperCase(Locale.ROOT));
+        reset_sound_error = getSound(config.getString("reset-sound-error"));
 
-        chatFormat = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("chat-format")).replace("&","§"));
+        chatFormat = color(Objects.requireNonNull(config.getString("chat-format")).replace("&","§"));
         plugin_chat = config.getBoolean("chat");
 
-        joinMessage = Objects.requireNonNull(ColorUtils.translateStringColor(config.getStringList("join-message.message")));
+        joinMessage = Objects.requireNonNull(color(config.getStringList("join-message.message")));
         first_join = config.getBoolean("join-message.first-join");
         clear_chat = config.getBoolean("join-message.clear-chat");
 
         barsize = config.getInt("progress-bar.size");
-        bar = ColorUtils.translateStringColor(config.getString("progress-bar.bar"));
-        color1 = ColorUtils.translateStringColor(config.getString("progress-bar.color-1"));
-        color2 = ColorUtils.translateStringColor(config.getString("progress-bar.color-2"));
+        bar = color(config.getString("progress-bar.bar"));
+        color1 = color(config.getString("progress-bar.color-1"));
+        color2 = color(config.getString("progress-bar.color-2"));
     }
 
 

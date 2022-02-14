@@ -4,9 +4,9 @@ import br.com.eskaryos.rankup.Main;
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Profile;
 import br.com.eskaryos.rankup.ranks.Rank;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,6 +21,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class RequirementMain {
 
@@ -66,25 +67,16 @@ public class RequirementMain {
      * @param p Player to update
      * @param e Event to update
      */
+
+
     public static void setMineRequirement(Player p, BlockBreakEvent e) {
         Profile profile = DataMain.getProfile(p.getUniqueId());
         if(profile.getNext()==null)return;
-        Block block = e.getBlock();
-        Material type = block.getType();
-        byte data = block.getData();
-        if(profile.getNext().getRequirements().get(RequirementType.MINE).isEmpty())return;
-        for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.MINE)){
-            if(requirement.getItem().getType().equals(type) && requirement.getItem().getDurability() ==
-            data){
-                if(requirement.getValue()>=requirement.getMax())return;
-                if((requirement.getValue()+1)>requirement.getMax())return;
-                requirement.setValue(requirement.getValue()+1);
-                sendCompletedMessage(p,requirement);
-                e.getBlock().setMetadata("mine",new FixedMetadataValue(Main.plugin,true));
-                return;
-            }
-        }
-
+        ItemStack block = new ItemStack(e.getBlock().getType(),1,e.getBlock().getData());
+        Rank next = profile.getNext();
+        if(next.getRequirements().get(RequirementType.MINE).isEmpty())return;
+        updateRequirement(p,RequirementType.MINE,block,1);
+        e.getBlock().setMetadata("mine",new FixedMetadataValue(Main.plugin,true));
     }
 
     /**
@@ -99,15 +91,7 @@ public class RequirementMain {
             if (e.getCaught() instanceof Item) {
                 ItemStack item = ((Item) e.getCaught()).getItemStack();
                 if (profile.getNext().getRequirements().get(RequirementType.FISH).isEmpty()) return;
-                for (Requirement requirement : profile.getNext().getRequirements().get(RequirementType.FISH)) {
-                    if (item.isSimilar(requirement.getItem())) {
-                        if (requirement.getValue() >= requirement.getMax()) return;
-                        if ((requirement.getValue() + 1) > requirement.getMax()) return;
-                        requirement.setValue(requirement.getValue() + 1);
-                        sendCompletedMessage(p,requirement);
-                        return;
-                    }
-                }
+                updateRequirement(p,RequirementType.FISH,item,item.getAmount());
             }
         }
     }
@@ -121,22 +105,9 @@ public class RequirementMain {
     public static void setPlaceRequirement(Player p, BlockPlaceEvent e) {
         Profile profile = DataMain.getProfile(p.getUniqueId());
         if(profile.getNext()==null)return;
-
-        Block block = e.getBlock();
-        Material type = block.getType();
-        byte data = block.getData();
+        ItemStack block = new ItemStack(e.getBlock().getType(),1,e.getBlock().getData());
         if(profile.getNext().getRequirements().get(RequirementType.PLACE).isEmpty())return;
-
-        for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.PLACE)){
-            if(requirement.getItem().getType().equals(type) && requirement.getItem().getDurability() ==
-                    data){
-                if(requirement.getValue()>=requirement.getMax())return;
-                if((requirement.getValue()+1)>requirement.getMax())return;
-                requirement.setValue(requirement.getValue()+1);
-                sendCompletedMessage(p,requirement);
-                return;
-            }
-        }
+        updateRequirement(p,RequirementType.PLACE,block,1);
     }
 
     public static void setKillRequirement(EntityDeathEvent e) {
@@ -145,17 +116,7 @@ public class RequirementMain {
             Profile profile = DataMain.getProfile(p.getUniqueId());
             if(profile.getNext()==null)return;
             if(profile.getNext().getRequirements().get(RequirementType.KILL).isEmpty())return;
-
-
-            for(Requirement requirement : profile.getNext().getRequirements().get(RequirementType.KILL)){
-                if(e.getEntity().getType().name().equals(requirement.getEntity().toUpperCase(Locale.ROOT))){
-                    if(requirement.getValue()>=requirement.getMax())return;
-                    if((requirement.getValue()+1)>requirement.getMax())return;
-                    requirement.setValue(requirement.getValue()+1);
-                    sendCompletedMessage(p,requirement);
-                    return;
-                }
-            }
+            updateRequirement(p,RequirementType.KILL,e.getEntity(),1);
         }
 
     }
@@ -191,19 +152,43 @@ public class RequirementMain {
 
         final List<Requirement> requirements = rank.getRequirements().get(type);
         if(requirements.isEmpty())return;
-        setValueisTrue(p,requirements,e.getRecipe().getResult(),realAmount);
+        updateRequirement(p,RequirementType.CRAFT,e.getRecipe().getResult(),realAmount);
     }
-    private static void setValueisTrue(Player p, List<Requirement> list, ItemStack item, int realAmount){
-        for(Requirement requirement : list){
-            if(requirement.getItem().isSimilar(item)){
-                if(requirement.getValue()>=requirement.getMax())return;
-                int var = Math.min((requirement.getValue() + realAmount), requirement.getMax());
-                requirement.setValue(var);
-                sendCompletedMessage(p,requirement);
-                return;
-            }
+
+    /***
+     * Method to update Requirement
+     * @param p Player to update
+     * @param type Type of Requirement
+     * @param obj Object to requirement (item/mob)
+     * @param value Value to update
+     */
+    public static void updateRequirement(Player p,RequirementType type,Object obj, int value){
+        Profile profile = DataMain.getProfile(p.getUniqueId());
+        Rank next =profile.getNext();
+
+        if(next.getRequirements().get(type).isEmpty())return;
+        if(type!=RequirementType.KILL){
+            ItemStack item = (ItemStack) obj;
+            List<Requirement> requirement = next.getRequirements().get(type).
+                    stream().filter(t -> t.getItem().isSimilar(item)).collect(Collectors.toList());
+            if(requirement.isEmpty()) return;
+            if(requirement.get(0).getValue()>=requirement.get(0).getMax())return;
+            if((requirement.get(0).getValue()+1)>requirement.get(0).getMax())return;
+            requirement.get(0).setValue(requirement.get(0).getValue()+value);
+            sendCompletedMessage(p,requirement.get(0));
+            return;
         }
+        Entity e = (Entity) obj;
+        System.out.println(e.getType().name());
+        List<Requirement> requirement = next.getRequirements().get(type).
+                stream().filter(t -> e.getType().name().equals(t.getEntity().toUpperCase(Locale.ROOT))).collect(Collectors.toList());
+        if(requirement.isEmpty())return;
+        if(requirement.get(0).getValue()>=requirement.get(0).getMax())return;
+        if((requirement.get(0).getValue()+1)>requirement.get(0).getMax())return;
+        requirement.get(0).setValue(requirement.get(0).getValue()+value);
+        sendCompletedMessage(p,requirement.get(0));
     }
+
     public static void sendCompletedMessage(Player p,Requirement requirement){
         if(requirement.getValue()>=requirement.getMax()){
             requirement.sendBar(p);

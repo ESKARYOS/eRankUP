@@ -1,11 +1,12 @@
 package br.com.eskaryos.rankup.menu;
 
 import br.com.eskaryos.rankup.Main;
+import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.ranks.Rank;
-import br.com.eskaryos.rankup.utils.bukkit.ColorUtils;
 import br.com.eskaryos.rankup.utils.bukkit.ItemUtils;
 import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
+import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.io.File;
 import java.util.*;
 
-public class RankMenu {
+public class RankMenu extends Utils {
 
     public static Map<String,Menu> menus = new HashMap<>();
 
@@ -29,16 +30,21 @@ public class RankMenu {
     public static ItemStack denyItem;
 
     public static void confirmEvolve(Player p){
-        p.openInventory(menus.get("ConfirmMenu").getMenu(p));
+        p.openInventory(menus.get("ConfirmMenu").getMenu(p,true));
     }
 
     public static void menu(Rank rank, Player p){
-        p.openInventory(rank.getMenu().getMenu(p));
+        if(DataMain.getProfile(p.getUniqueId()).getNext()!=null &&
+        DataMain.getProfile(p.getUniqueId()).getNext().getOrder() == rank.getOrder()){
+            p.openInventory(rank.getMenu().getMenu(p,true));
+        }else{
+            p.openInventory(rank.getMenu().getMenu(p,false));
+        }
     }
 
     public static void rankMenu(Player p,int page){
         if(menus.containsKey("page-"+page)){
-            p.openInventory(menus.get("page-"+page).getMenu(p));
+            p.openInventory(menus.get("page-"+page).getMenu(p,false));
         }else{
             p.sendMessage(Lang.invalidMenu);
         }
@@ -49,7 +55,7 @@ public class RankMenu {
         if(!file.exists()){Main.plugin.saveResource("menu.yml",true);}
         YamlConfiguration config = JavaUtils.loadConfigUTF8(file);
 
-        confirmName = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString("Confirm-Menu.name")));
+        confirmName = color(Objects.requireNonNull(config.getString("Confirm-Menu.name")));
         int confirmSize = config.getInt("Confirm-Menu.size");
 
         confirmItem = getItem(config,"Confirm-Menu.items.confirm");
@@ -63,7 +69,7 @@ public class RankMenu {
             confirmMenu.getItemSlot().put(key,config.getInt("Confirm-Menu.items."+key+".slot"));
         }
         for(String key : Objects.requireNonNull(config.getConfigurationSection("Rank-Menu")).getKeys(false)){
-            String name = ColorUtils.translateStringColor(config.getString("Rank-Menu."+key+".name"));
+            String name = color(config.getString("Rank-Menu."+key+".name"));
             int slot = config.getInt("Rank-Menu."+key+".size");
             Menu menu = new Menu(name,slot,Integer.parseInt(key.split("-")[1]));
             menuTitles.add(name);
@@ -89,8 +95,8 @@ public class RankMenu {
         String name = "";
         List<String> lore = new ArrayList<>();
 
-        if(config.contains(key+".display")){name = ColorUtils.translateStringColor(Objects.requireNonNull(config.getString(key+".display")));}
-        if(config.contains(key+".lore")){lore = ColorUtils.translateStringColor(config.getStringList(key+".lore"));}
+        if(config.contains(key+".display")){name = color(Objects.requireNonNull(config.getString(key+".display")));}
+        if(config.contains(key+".lore")){lore = color(config.getStringList(key+".lore"));}
 
 
         if(Objects.requireNonNull(config.getString(key + ".material")).contains("head:")){

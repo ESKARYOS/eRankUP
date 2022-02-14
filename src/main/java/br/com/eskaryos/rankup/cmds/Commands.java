@@ -14,7 +14,7 @@ public class Commands {
             new RanksCommand();
             new Reset();
             new ForceEvolve();
-            Objects.requireNonNull(m.getCommand("rank")).setExecutor(new RankCommand());
+            Objects.requireNonNull(m.getCommand("rankup")).setExecutor(new RankCommand());
             Logger.log(Logger.LogLevel.INFO,Lang.commands_sucess);
         }catch (Exception e){
             Logger.log(Logger.LogLevel.ERROR, Lang.commands_error);

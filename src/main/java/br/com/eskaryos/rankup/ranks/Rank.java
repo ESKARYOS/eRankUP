@@ -4,14 +4,14 @@ package br.com.eskaryos.rankup.ranks;
 import br.com.eskaryos.rankup.menu.Menu;
 import br.com.eskaryos.rankup.requirements.Requirement;
 import br.com.eskaryos.rankup.requirements.RequirementType;
-import br.com.eskaryos.rankup.utils.api.ActionBar;
-import br.com.eskaryos.rankup.utils.api.Title;
-import br.com.eskaryos.rankup.utils.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.nms.ActionBar;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,9 +25,9 @@ public class Rank {
     private String display;
     private int order;
 
-    private SoundsAPI evolveSound;
-    private SoundsAPI evolveSoundAll;
-    private SoundsAPI evolveSoundError;
+    private Sound evolveSound;
+    private Sound evolveSoundAll;
+    private Sound evolveSoundError;
 
     private List<String> evolveMessage = new ArrayList<>();
     private List<String> evolveMessageAll = new ArrayList<>();
@@ -69,7 +69,7 @@ public class Rank {
         }
     }
     public void sendEvolveTitle(Player p){
-        Title.sendTitle(p,RankHolder.hook(p,evolveTitle),RankHolder.hook(p,evolveSubTitle),0,20*5,0);
+        ActionBar.sendTitle(p,RankHolder.hook(p,evolveTitle),RankHolder.hook(p,evolveSubTitle),0,20*5,0);
     }
 
     public int getTotalMax(){
@@ -99,11 +99,20 @@ public class Rank {
         r.setEvolveSound(getEvolveSound());
         r.setEvolveSoundAll(getEvolveSoundAll());
         r.setEvolveSoundError(getEvolveSoundError());
+
         r.setEvolveMessage(getEvolveMessage());
         r.setEvolveMessageAll(getEvolveMessageAll());
+
         r.setRankIcon(getRankIcon().clone());
         r.setRankIconCompleted(getRankIconCompleted().clone());
         r.setCommands(getCommands());
+
+        r.setEvolveActionbar(getEvolveActionbar());
+        r.setEvolveActionbarAll(getEvolveActionbarAll());
+
+        r.setEvolveTitle(getEvolveTitle());
+        r.setEvolveSubTitle(getEvolveSubTitle());
+
 
         for(RequirementType type : getRequirements().keySet()){
             for(Requirement requirement : getRequirements().get(type)){
@@ -140,9 +149,9 @@ public class Rank {
      * Method to sendAll evolve sound
      */
     public void sendAllEvolveSound(){
-        if(getEvolveSoundAll()==SoundsAPI.DISABLED)return;
+        if(getEvolveSoundAll()==null)return;
         for(Player p : Bukkit.getOnlinePlayers()){
-            p.playSound(p.getLocation(), Objects.requireNonNull(getEvolveSoundAll().bukkitSound()),1F,1F);
+            p.playSound(p.getLocation(), evolveSoundAll,1F,1F);
         }
     }
     /**
@@ -150,8 +159,8 @@ public class Rank {
      * @param p Player to send Sound
      */
     public void sendEvolveSound(Player p){
-        if(getEvolveSound()==SoundsAPI.DISABLED)return;
-        p.playSound(p.getLocation(), Objects.requireNonNull(getEvolveSound().bukkitSound()),1F,1F);
+        if(getEvolveSound()==null)return;
+        p.playSound(p.getLocation(), evolveSound,1F,1F);
     }
 
     /**
@@ -159,8 +168,8 @@ public class Rank {
      * @param p Player to send Message
      */
     public void sendEvolveSoundError(Player p){
-        if(getEvolveSoundError()==SoundsAPI.DISABLED)return;
-        p.playSound(p.getLocation(), Objects.requireNonNull(getEvolveSoundError().bukkitSound()),1F,1F);
+        if(getEvolveSound()==null)return;
+        p.playSound(p.getLocation(), evolveSoundError,1F,1F);
     }
 
     /**
@@ -195,7 +204,6 @@ public class Rank {
                     meta.setLore(lore);
                 }
                 item.setItemMeta(meta);
-
                 p.getInventory().addItem(item);
             }else if(s.contains("bc")){
                 s =s.replace("<player>",p.getDisplayName());
