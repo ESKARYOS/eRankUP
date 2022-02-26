@@ -52,15 +52,6 @@ Rank-Menu:
       rank4:
         rank: fish3
         slot: 13
-      rank5:
-        rank: cow1
-        slot: 14
-      rank6:
-        rank: cow2
-        slot: 15
-      rank7:
-        rank: cow3
-        slot: 16
       next:
         display: "&cNext page"
         material: arrow

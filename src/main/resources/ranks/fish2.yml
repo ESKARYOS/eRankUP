@@ -64,10 +64,10 @@ menu:
         - '&7To complete this requirement'
         - '&7you need to mine the following block.'
         - ''
-        - '&7Mine: &64.000x - Sands'
+        - '&7Mine: &65.000x - Sands'
         - ''
-        - '&7Mined: &e%value_mine_0%'
-        - '&7Progress: %bar_mine_0%'
+        - '&7Mined: &e%value_mine_sand%'
+        - '&7Progress: %bar_mine_sand%'
     requirement-2:
       display: "&aRequirement - #2"
       slot: 21
@@ -78,10 +78,38 @@ menu:
         - '&7To complete this requirement'
         - '&7you need to fish the following.'
         - ''
-        - '&7Fish caught: &e3.000x - Fish'
+        - '&7Fish caught: &e5.000x - Fish'
         - ''
-        - '&7Items crafted: &e%value_fish_0%'
-        - '&7Progress: %bar_fish_0%'
+        - '&7Items crafted: &e%value_fish_tropical%'
+        - '&7Progress: %bar_fish_tropical%'
+    requirement-3:
+      display: "&aRequirement - #3"
+      slot: 22
+      material: cooked_cod
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to cook the following.'
+        - ''
+        - '&7Cook: &e5.000x - Cod'
+        - ''
+        - '&7Items crafted: &e%value_cook_fish%'
+        - '&7Progress: %bar_cook_fish%'
+    requirement-4:
+      display: "&aRequirement - #4"
+      slot: 23
+      material: fishing_rod
+      data: 0
+      ammount: 1
+      lore:
+        - '&7To complete this requirement'
+        - '&7you need to cook the following.'
+        - ''
+        - '&7Craft: &e50x - Fishing rod'
+        - ''
+        - '&7Items crafted: &e%value_craft_rod%'
+        - '&7Progress: %bar_craft_rod%'
     evolve:
       display: "&aClick to evolve"
       slot: 31
@@ -146,7 +174,7 @@ commands:
 requirements:
   mine_sand:
     type: MINE
-    value: 4000
+    value: 5000
     sound: LEVEL_UP
     title: "&aCompleted:&fcompleted requirement"
     actionbar: "&aCongratulations you have completed &eRequirement #1"
@@ -154,12 +182,12 @@ requirements:
       - '&eYou have completed Requirement #1'
       - '&ecomplete the other requirements to evolve.'
     item:
-      material: hay_block
+      material: sand
       data: 0
       ammount: 1
-  fish_fish:
+  fish_tropical:
     type: FISH
-    value: 3000
+    value: 5000
     sound: LEVEL_UP
     title: "&aCompleted:&fcompleted requirement"
     actionbar: "&aCongratulations you have completed &eRequirement #2"
@@ -168,5 +196,31 @@ requirements:
       - '&ecomplete the other requirements to evolve.'
     item:
       material: tropical_fish
+      data: 0
+      ammount: 1
+  cook_fish:
+    type: FISH
+    value: 5000
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #3"
+    message:
+      - '&eYou have completed Requirement #3'
+      - '&ecomplete the other requirements to evolve.'
+    item:
+      material: cooked_cod
+      data: 0
+      ammount: 1
+  craft_rod:
+    type: CRAFT
+    value: 50
+    sound: LEVEL_UP
+    title: "&aCompleted:&fcompleted requirement"
+    actionbar: "&aCongratulations you have completed &eRequirement #4"
+    message:
+      - '&eYou have completed Requirement #4'
+      - '&ecomplete the other requirements to evolve.'
+    item:
+      material: fishing_rod
       data: 0
       ammount: 1
