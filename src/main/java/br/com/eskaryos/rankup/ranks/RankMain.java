@@ -15,13 +15,16 @@ import br.com.eskaryos.rankup.utils.bukkit.Logger;
 import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RankMain extends Utils {
 
@@ -87,14 +90,9 @@ public class RankMain extends Utils {
 
     public static boolean hascompleted(Player p){
         Rank rank = DataMain.getProfile(p.getUniqueId()).getNext();
-        List<Requirement> list = new ArrayList<>();
-        for(RequirementType type : rank.getRequirements().keySet()){
-            list.addAll(rank.getRequirements().get(type));
-        }
-        for(Requirement requirement : list){
+        for(Requirement requirement : rank.getRequirements().values()){
             if(requirement.getValue()<requirement.getMax()){
-                p.sendMessage(RankHolder.hook(p,Lang.requirementError));
-                rank.sendEvolveSoundError(p);
+                p.sendMessage(Lang.requirementError.replace("<requirement>",requirement.getName()));
                 return false;
             }
         }
@@ -109,21 +107,28 @@ public class RankMain extends Utils {
     public static void evolve(UUID uuid,Rank evolve){
         Rank rank = DataMain.getProfile(uuid).getRank();
         Player p = Bukkit.getPlayer(uuid);
+        if(DataMain.getProfile(uuid).getNext()==null)return;
         assert p!=null;
         if(isLastRank(p)){p.sendMessage(RankHolder.hook(p,Lang.last_rank));rank.sendEvolveSoundError(p);return;}
         if(rank.getOrder()>evolve.getOrder()){p.sendMessage(RankHolder.hook(p,Lang.downgrade));rank.sendEvolveSoundError(p);return;}
         if(rank.getOrder()-evolve.getOrder()>1){p.sendMessage(RankHolder.hook(p,Lang.cantJump));rank.sendEvolveSoundError(p);return;}
-        if(hascompleted(p)){DataMain.getProfile(uuid).setRank(clone(evolve));
-            if(evolve.getOrder()<RankMain.getFinalRank().getOrder()){DataMain.getProfile(p.getUniqueId()).setNext(RankMain.getRankById(evolve.getOrder()+1));}
-            evolve.sendEvolveMessage(p);
-            evolve.sendAllEvolveMessage(p);
-            evolve.sendEvolveSound(p);
-            evolve.sendAllEvolveSound();
-            evolve.sendEvolveBar(p);
-            evolve.sendEvolveBarAll(p);
-            evolve.sendEvolveTitle(p);
-            evolve.executeCommand(p);
+        if(!hascompleted(p)){
+            DataMain.getProfile(uuid).getNext().sendEvolveSoundError(p);return;}
+        DataMain.getProfile(uuid).setRank(clone(evolve));
+        if(evolve.getOrder()<RankMain.getFinalRank().getOrder()){
+            DataMain.getProfile(p.getUniqueId()).setNext(RankMain.getRankById(evolve.getOrder()+1));
         }
+        evolve.sendEvolveMessage(p);
+        evolve.sendAllEvolveMessage(p);
+
+        evolve.sendEvolveSound(p);
+        evolve.sendAllEvolveSound();
+
+        evolve.sendEvolveBar(p);
+        evolve.sendEvolveBarAll(p);
+
+        evolve.sendEvolveTitle(p);
+        evolve.executeCommand(p);
     }
 
     /***
@@ -202,15 +207,30 @@ public class RankMain extends Utils {
                         SoundsAPI sound = SoundsAPI.valueOf(config.getString("requirements."+key+".sound"));
                         String title = color(config.getString("requirements."+key+".title"));
                         String bar = color(config.getString("requirements."+key+".actionbar"));
-
-                        if(type != RequirementType.KILL){
-                           ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
-                           int max = config.getInt("requirements."+key+".value");
-                           rank.getRequirements().get(type).add(new Requirement(item,null,max,completedMessage,title,bar,sound));
-                        }else{
+                        String reqName = color(config.getString("requirements."+key+".name"));
+                        if(type == RequirementType.KILL){
                             String entity = config.getString("requirements."+key+".entity");
                             int max = config.getInt("requirements."+key+".value");
-                            rank.getRequirements().get(type).add(new Requirement(null,entity,max,completedMessage,title,bar,sound));
+                            Requirement req = new Requirement(reqName,type, max, completedMessage, title, bar, sound);
+                            req.setEntity(entity);
+                            rank.getRequirements().put(key,req);
+                            rank.getRequirementsbytype().get(type).add(req);
+                        }else if(type ==RequirementType.ENCHANT){
+                            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(Objects.requireNonNull(config.getString("requirements." + key + ".enchantment"))));
+                            int max = config.getInt("requirements."+key+".value");
+                            ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
+                            Requirement req =new Requirement(reqName,type,max,completedMessage,title,bar,sound);
+                            req.setEnchantment(enchantment);
+                            req.setItem(item);
+                            rank.getRequirements().put(key,req);
+                            rank.getRequirementsbytype().get(type).add(req);
+                        }else{
+                            ItemStack item = RankMenu.getItem(config,"requirements."+key+".item");
+                            int max = config.getInt("requirements."+key+".value");
+                            Requirement req = new Requirement(reqName,type, max, completedMessage, title, bar, sound);
+                            req.setItem(item);
+                            rank.getRequirements().put(key,req);
+                            rank.getRequirementsbytype().get(type).add(req);
                         }
 
                     }
@@ -228,6 +248,8 @@ public class RankMain extends Utils {
                    Logger.log(Logger.LogLevel.ERROR,e.getMessage());
                 }
             }
+
         }
+
     }
 }

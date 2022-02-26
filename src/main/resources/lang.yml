@@ -7,7 +7,7 @@ invalid-menu: "&cThis menu does not exist, please try again.."
 cant-jump: "&cYou cannot evolve to a higher rank, evolve for <next> first."
 downgrade: "&cYou cannot downgrade your rank."
 evolve-error: "&cYou cannot evolve to this rank."
-requirement-error: "&cYou need to complete the requirements to evolve."
+requirement-error: "&eYou need to complete the requirement <requirement> &eto evolve."
 
 
 sqlite-sucess: "&aSQLite connection completed."

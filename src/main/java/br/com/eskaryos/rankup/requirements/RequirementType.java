@@ -6,6 +6,9 @@ public enum RequirementType {
     PLACE,
     CRAFT,
     FISH,
+    COOK,
+    CONSUME,
+    ENCHANT,
     KILL
 
 }

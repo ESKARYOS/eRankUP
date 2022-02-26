@@ -10,10 +10,10 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PapiRequirementsBar extends PlaceholderExpansion {
+public class PapiRequirementsPercent extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
-        return "bar";
+        return "percent";
     }
 
     @Override
@@ -33,12 +33,12 @@ public class PapiRequirementsBar extends PlaceholderExpansion {
             if(profile.getNext()==null) return "&cERROR";
             int value = profile.getNext().getTotalValue();
             int max = profile.getNext().getTotalMax();
-            return JavaUtils.makeProgressBar(value,max,Lang.color1,Lang.color2,Lang.barsize);
+            return JavaUtils.percent(value,max);
         }
         try{
             int value = Integer.parseInt(RequirementMain.getRequirementValue(p,s));
             int max = Integer.parseInt(RequirementMain.getRequirementMaxValue(p,s));
-            return JavaUtils.makeProgressBar(value,max,Lang.color1,Lang.color2,Lang.barsize);
+            return JavaUtils.percent(value,max);
         }catch (NumberFormatException e){
             return "&cERROR";
         }

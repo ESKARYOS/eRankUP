@@ -28,7 +28,7 @@ public class Lang extends Utils {
     public static String cantJump = "§cYou cannot evolve to a higher rank, evolve for <next> first.";
     public static String downgrade = "§cYou cannot downgrade your rank.";
     public static String evolveError = "§cYou cannot evolve to this rank.";
-    public static String requirementError = "§cYou need to complete the requirements to evolve.";
+    public static String requirementError = "§cYou need to complete the requirement <requirement> to evolve.";
 
     public static String wrong_rank = "<rank> &crank does not exist.";
     public static String command_forcerank = "&cUse /force rank <rank>";
@@ -149,6 +149,16 @@ public class Lang extends Utils {
         bar = color(config.getString("progress-bar.bar"));
         color1 = color(config.getString("progress-bar.color-1"));
         color2 = color(config.getString("progress-bar.color-2"));
+
+        if(config.getBoolean("MySQL.Activated")){
+            String host = config.getString("MySQL.Host");
+            String base = config.getString("MySQL.Database");
+            String user = config.getString("MySQL.User");
+            String pass = config.getString("MySQL.Password");
+            String port = config.getString("MySQL.Port");
+            DataMain.mySQL = new MySQL(host,base,user,pass,port,"rankup");
+        }
+
     }
 
 

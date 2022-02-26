@@ -1,16 +1,10 @@
 package br.com.eskaryos.rankup.data;
 
 import br.com.eskaryos.rankup.ranks.Rank;
-import br.com.eskaryos.rankup.requirements.Requirement;
-import br.com.eskaryos.rankup.requirements.RequirementType;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.Hash;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class DataMain {
 
@@ -28,19 +22,52 @@ public class DataMain {
         return new ArrayList<>(profileList.values());
     }
 
+    public static MySQL mySQL;
+
+
+
     public static void LoadPlayerData(Player p){
         if(profileList.containsKey(p.getUniqueId()))return;
-        Database.loadPlayer(p.getUniqueId());
+        if(mySQL!=null){
+            mySQL.loadPlayer(p.getUniqueId());
+        }else{
+            SQLite.loadPlayer(p.getUniqueId());
+        }
     }
     public static void UnloadPlayerData(Player p){
         if(!profileList.containsKey(p.getUniqueId()))return;
         if(profileList.get(p.getUniqueId()).getRank()==null)return;
-        Database.setRank(p.getUniqueId(),profileList.get(p.getUniqueId()).getRank().getName());
+
+        if(mySQL!=null){
+            mySQL.setRank(p.getUniqueId(),profileList.get(p.getUniqueId()).getRank().getName());
+            mySQL.setRequirement(p.getUniqueId(),profileList.get(p.getUniqueId()).getNext());
+        }else{
+            SQLite.setRank(p.getUniqueId(),profileList.get(p.getUniqueId()).getRank().getName());
+            SQLite.setRequirement(p.getUniqueId(),profileList.get(p.getUniqueId()).getNext());
+        }
         getProfileList().remove(p.getUniqueId());
     }
 
+    public static String serializeRequirements(Rank rank){
+        StringBuilder text = new StringBuilder();
+        for (String r : rank.getRequirements().keySet()) {
+            text.append(r+":"+rank.getRequirements().get(r).getValue()).append(",");
+        }
+        return text.toString();
+    }
+    public static void deserializeRequirement(String name,Rank rank){
+        if(name.length()<=1)return;
+        String[] key = name.split(",");
+        for (String s : key) {
+            String value = s.split(":")[1];
+            String requirement = s.split(":")[0];
+            if(rank.getRequirements().containsKey(requirement)){
+                rank.getRequirements().get(requirement).setValue(Integer.parseInt(value));
+            }
+        }
+    }
 
-    public static void deserializeRequirements(Map<RequirementType,String> list,Rank rank){
+   /* public static void deserializeRequirements(Map<RequirementType,String> list,Rank rank){
         for(RequirementType type : list.keySet()){
             String line = list.get(type);
             Pattern pattern = Pattern.compile("(\\w+?),");
@@ -70,10 +97,12 @@ public class DataMain {
             }
         }
         return listt;
-    }
+    }*/
 
     public static void SetupData(){
-        Database.openSQL();
+        if(mySQL==null){
+            SQLite.openSQL();
+        }
         for(Player p : Bukkit.getOnlinePlayers()){
             LoadPlayerData(p);
         }
@@ -82,6 +111,8 @@ public class DataMain {
         for(Player p : Bukkit.getOnlinePlayers()){
             UnloadPlayerData(p);
         }
-        Database.close();
+        if(mySQL==null){
+            SQLite.close();
+        }else{mySQL.close();}
     }
 }

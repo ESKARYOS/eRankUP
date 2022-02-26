@@ -4,14 +4,15 @@ package br.com.eskaryos.rankup.ranks;
 import br.com.eskaryos.rankup.menu.Menu;
 import br.com.eskaryos.rankup.requirements.Requirement;
 import br.com.eskaryos.rankup.requirements.RequirementType;
-import br.com.eskaryos.rankup.utils.nms.ActionBar;
-import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
 import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
+import br.com.eskaryos.rankup.utils.nms.ActionBar;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,8 +40,9 @@ public class Rank {
 
     private List<String> commands = new ArrayList<>();
 
-    private Map<RequirementType,List<Requirement>> requirements;
-
+    private Map<String,Requirement> requirements;
+    private Map<RequirementType,List<Requirement>> requirementsbytype;
+    private Requirement lastRequirement;
     private ItemStack rankIcon;
     private ItemStack rankIconCompleted;
 
@@ -51,11 +53,10 @@ public class Rank {
         this.display = display;
         this.order = order;
         requirements = new HashMap<>();
-        requirements.put(RequirementType.CRAFT,new ArrayList<>());
-        requirements.put(RequirementType.MINE,new ArrayList<>());
-        requirements.put(RequirementType.FISH,new ArrayList<>());
-        requirements.put(RequirementType.PLACE,new ArrayList<>());
-        requirements.put(RequirementType.KILL,new ArrayList<>());
+        requirementsbytype = new HashMap<>();
+        for (RequirementType value : RequirementType.values()) {
+            getRequirementsbytype().put(value,new ArrayList<>());
+        }
     }
 
     public void sendEvolveBar(Player p){
@@ -74,19 +75,15 @@ public class Rank {
 
     public int getTotalMax(){
         int value = 0;
-        for(RequirementType type : getRequirements().keySet()){
-            for(Requirement requirement : getRequirements().get(type)){
-                value = value+requirement.getMax();
-            }
+        for (Requirement requirement : getRequirements().values()) {
+            value = value +requirement.getMax();
         }
         return value;
     }
     public int getTotalValue(){
         int value = 0;
-        for(RequirementType type : getRequirements().keySet()){
-            for(Requirement requirement : getRequirements().get(type)){
-                value = value+requirement.getValue();
-            }
+        for (Requirement requirement : getRequirements().values()) {
+            value = value +requirement.getValue();
         }
         return value;
     }
@@ -100,27 +97,41 @@ public class Rank {
         r.setEvolveSoundAll(getEvolveSoundAll());
         r.setEvolveSoundError(getEvolveSoundError());
 
-        r.setEvolveMessage(getEvolveMessage());
-        r.setEvolveMessageAll(getEvolveMessageAll());
+        r.setEvolveMessage(new ArrayList<>(getEvolveMessage()));
+        r.setEvolveMessageAll(new ArrayList<>(getEvolveMessageAll()));
 
         r.setRankIcon(getRankIcon().clone());
         r.setRankIconCompleted(getRankIconCompleted().clone());
-        r.setCommands(getCommands());
+        r.setCommands(new ArrayList<>(getCommands()));
 
         r.setEvolveActionbar(getEvolveActionbar());
         r.setEvolveActionbarAll(getEvolveActionbarAll());
 
         r.setEvolveTitle(getEvolveTitle());
         r.setEvolveSubTitle(getEvolveSubTitle());
-
-
-        for(RequirementType type : getRequirements().keySet()){
-            for(Requirement requirement : getRequirements().get(type)){
-                r.getRequirements().get(type).add(requirement);
-            }
+        for (String s : getRequirements().keySet()) {
+            Requirement clone = cloneRequirement(getRequirements().get(s));
+            r.getRequirements().put(s,clone);
+            r.getRequirementsbytype().get(clone.getType()).add(clone);
         }
+        r.setMenu(getMenu());
 
         return r;
+    }
+
+    public Requirement cloneRequirement(Requirement r){
+        RequirementType type = r.getType();
+        String name = r.getName();
+        int max = r.getMax();
+        List<String> cMessage = r.getCompletedMessage();
+        String cTitle = r.getTitleCompleted();
+        String cBar = r.getActionBarCompleted();
+        SoundsAPI sound = r.getSoundCompleted();
+        Requirement requirement = new Requirement(name, type, max, cMessage, cTitle, cBar, sound);
+        if(r.getItem()!=null){requirement.setItem(r.getItem().clone());}
+        if(r.getEntity()!=null){requirement.setEntity(r.getEntity()+"");}
+        if(r.getEnchantment()!=null){requirement.setEnchantment(r.getEnchantment());}
+        return requirement;
     }
     /**
      * Method to send player evolve message

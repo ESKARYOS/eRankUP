@@ -1,3 +1,11 @@
+#Database system, use mysql if you already have it, leave it off to use the local database
+MySQL:
+  Activated: false
+  User: "root"
+  Password: ""
+  Database: "test"
+  Host: "localhost"
+  Port: "3306"
 
 #Sound that is played when resetting rank
 reset-sound: BAT_TAKEOFF

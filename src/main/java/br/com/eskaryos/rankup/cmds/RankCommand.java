@@ -1,6 +1,11 @@
 package br.com.eskaryos.rankup.cmds;
 
 import br.com.eskaryos.rankup.Main;
+import br.com.eskaryos.rankup.data.DataMain;
+import br.com.eskaryos.rankup.data.Profile;
+import br.com.eskaryos.rankup.menu.RankMenu;
+import br.com.eskaryos.rankup.ranks.Rank;
+import br.com.eskaryos.rankup.ranks.RankMain;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +25,14 @@ public class RankCommand implements CommandExecutor {
                     Main.plugin.getServer().getPluginManager().enablePlugin(Main.plugin);
                     p.sendMessage("§aPlugin reloaded.");
                 }
+            }else{
+               try{
+                   Profile profile = DataMain.getProfile(p.getUniqueId());
+                   Rank next = profile.getNext();
+                   if(next==null)return true;
+                   if(RankMain.isLastRank(p))return true;
+                   RankMenu.menu(next,p);
+               }catch (Exception e){}
             }
         }
         return false;

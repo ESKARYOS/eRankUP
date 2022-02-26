@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
+
     public static Sound getSound(String sound){
         try {
             return Sound.valueOf(sound);
@@ -161,10 +162,10 @@ public class Utils {
      * @param itemStack
      *            - ItemStack to be removed
      */
-    protected void removeItems(Player player, int amount, ItemStack itemStack) {
+    protected static void removeItems(Player player, int amount, ItemStack itemStack) {
         int slot = 0;
         for (ItemStack is : player.getInventory().getContents()) {
-            if (is != null && is.isSimilar(itemStack) && amount > 0) {
+            if (is.isSimilar(itemStack) && amount > 0) {
                 int currentAmount = is.getAmount() - amount;
                 amount -= is.getAmount();
                 if (currentAmount <= 0) {

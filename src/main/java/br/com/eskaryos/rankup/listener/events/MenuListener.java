@@ -1,12 +1,13 @@
-package br.com.eskaryos.rankup.menu;
+package br.com.eskaryos.rankup.listener.events;
 
 import br.com.eskaryos.rankup.data.DataMain;
 import br.com.eskaryos.rankup.listener.Listeners;
+import br.com.eskaryos.rankup.menu.Menu;
+import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.ranks.Rank;
 import br.com.eskaryos.rankup.ranks.RankMain;
-import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.api.placeholder.RankHolder;
-import br.com.eskaryos.rankup.utils.api.SoundsAPI;
+import br.com.eskaryos.rankup.utils.bukkit.JavaUtils;
 import br.com.eskaryos.rankup.utils.bukkit.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class MenuListener extends Listeners {
 
@@ -62,24 +66,27 @@ public class MenuListener extends Listeners {
         ItemStack item = e.getCurrentItem();
         assert item != null;
         if(hasRankMenu(e.getView().getTitle())!=null){
-            e.setCancelled(true);
             JavaUtils.playSound(p, Utils.getSound("CLICK"),1F,1F);
             Rank rank = hasRankMenu(e.getView().getTitle());
             Menu menu = rank.getMenu();
             if(menu.getItems().containsKey("evolve") && hasSimilar(p,item,getItem(p,menu.getItems().get("evolve")))){
                 RankMenu.confirmEvolve(p);
+                e.setCancelled(true);
                 return true;
             }
             if(menu.getItems().containsKey("back") && hasSimilar(p,item,getItem(p,menu.getItems().get("back")))){
                 RankMenu.rankMenu(p,1);
+                e.setCancelled(true);
                 return true;
             }
             if(menu.getItems().containsKey("close")) {
                 if (hasSimilar(p,item,getItem(p,menu.getItems().get("close")))) {
                     p.closeInventory();
+                    e.setCancelled(true);
                     return true;
                 }
             }
+            e.setCancelled(true);
             return true;
         }
         return false;
@@ -91,14 +98,15 @@ public class MenuListener extends Listeners {
         if(e.getView().getTitle().equals(RankMenu.confirmName)){
             e.setCancelled(true);
             assert item != null;
+            Rank next = DataMain.getProfile(p.getUniqueId()).getNext().clone();
             if(hasSimilar(p,item,RankMenu.menus.get("ConfirmMenu").clone(p,"confirm"))){
-                RankMain.evolve(p.getUniqueId(),DataMain.getProfile(p.getUniqueId()).getNext().clone());
+                RankMain.evolve(p.getUniqueId(),next);
                 p.closeInventory();
                 return true;
             }
             if(hasSimilar(p,item,RankMenu.menus.get("ConfirmMenu").clone(p,"deny"))){
                 p.closeInventory();
-                JavaUtils.playSound(p, Utils.getSound("CLICK"),1F,1F);
+                JavaUtils.playSound(p, next.getEvolveSoundError(),1F,1F);
                 return true;
             }
             return true;

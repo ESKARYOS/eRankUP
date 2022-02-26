@@ -6,10 +6,9 @@ import br.com.eskaryos.rankup.data.Lang;
 import br.com.eskaryos.rankup.listener.Listeners;
 import br.com.eskaryos.rankup.menu.RankMenu;
 import br.com.eskaryos.rankup.ranks.RankMain;
+import br.com.eskaryos.rankup.upgrade.UpgradeManager;
+import br.com.eskaryos.rankup.utils.api.placeholder.*;
 import br.com.eskaryos.rankup.utils.bukkit.Logger;
-import br.com.eskaryos.rankup.utils.api.placeholder.Papi;
-import br.com.eskaryos.rankup.utils.api.placeholder.PapiRequirements;
-import br.com.eskaryos.rankup.utils.api.placeholder.PapiRequirementsBar;
 import br.com.eskaryos.rankup.utils.api.UpdateChecker;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,12 +28,15 @@ public final class Main extends JavaPlugin {
                 Lang.LoadFolders();
                 RankMain.loadRank();
                 RankMenu.LoadMenus();
-                Listeners.setupListener();
                 Commands.setupCommands();
                 DataMain.SetupData();
+                Listeners.setupListener();
+                UpgradeManager.loadUpgrades();
 
                 new Papi().register();
-                new PapiRequirements().register();
+                new RequirementsValue().register();
+                new RequirementsMax().register();
+                new PapiRequirementsPercent().register();
                 new PapiRequirementsBar().register();
                 Logger.log(Logger.LogLevel.OUTLINE, "§aPlaceholdersAPI activated");
                 Logger.log(Logger.LogLevel.OUTLINE, "§a============================================");

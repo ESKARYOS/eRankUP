@@ -241,7 +241,15 @@ public class JavaUtils {
             p.playSound(p.getLocation(),sound,f1,f2);
         }
     }
+    public static String percent(int value,int max){
+        DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
+        double calc = (((double) value / (double)max) * 100.0D);
 
+        if(calc<100.0D){
+            return decimalFormat.format(calc)+"%";
+        }
+        return "100%";
+    }
     public static int hasItem(Player p, ItemStack item) {
         int i = 0;
         for (ItemStack items : p.getInventory().getContents()) {
